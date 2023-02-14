@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, Alert, TouchableOpacity } from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import SignUpScreen from './components/signup';
 
 class App extends Component {
   constructor(props){
@@ -10,7 +11,8 @@ class App extends Component {
       password : "",
       emailErr : "",
       genericErr : "",
-      passwordErr : ""
+      passwordErr : "",
+      submitted : false
     }
   }
 
@@ -21,6 +23,7 @@ class App extends Component {
 
   login() {
     this.clearErrorMessages()
+    this.setState({submitted : true})
     var validator = require('email-validator')
     const PASSWORD_REGEX = new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$')
     if (!(this.state.email && this.state.password ))
@@ -51,28 +54,25 @@ class App extends Component {
   render() {
     return (
       <View>
-        <View>
+        {/* <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
           <Text>Insert Email: </Text>
           <TextInput style={{flex: 1, flexDirection: 'row', alignItems: 'center'}} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
           <>
-            {this.state.emailErr &&
+            {this.state.emailErr && this.state.submitted &&
               <Text style={{color: 'red'}}>{this.state.emailErr}</Text>
             }
           </>  
-          
-        
-        
         </View>
-        <View>
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
           <Text>Insert Password: </Text>
           <TextInput style={{flex: 1, flexDirection: 'row', alignItems: 'center'}} placeholder='Password' secureTextEntry='true' onChangeText={(password) => this.setState({password})} value={this.state.password} />
           <>
-            {this.state.passwordErr &&
+            {this.state.passwordErr && this.state.submitted &&
               <Text style={{color: 'red'}}>{this.state.passwordErr}</Text>
             }
           </>  
         </View>
-        <TouchableOpacity  onPress={() => this.login()}>
+        <TouchableOpacity style={styles.buttonGreen} onPress={() => this.login()}>
                       <Text>Log in</Text>
         </TouchableOpacity>
 
@@ -81,14 +81,31 @@ class App extends Component {
               this.state.genericErr &&
               <Text style={{color: 'red'}}>{this.state.genericErr}</Text>
             }
-        </>
-
+        </> */}
+        <SignUpScreen />
       </View>
     
     );
+    
   }
-
 }
 
+const styles = StyleSheet.create({
+  buttonGreen: {
+    backgroundColor: 'green',
+    alignItems: 'center',
+    width: 80,
+    height: 30, 
+    marginTop: 20,
+    marginLeft: 20,
+    justifyContent: 'center'
+  },
+});
+
+
+
 export default App
+
+
+
 
