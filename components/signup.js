@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as EmailValidator from 'email-validator';
@@ -16,7 +16,7 @@ export default class SignUpScreen extends Component {
           email : "",
           password : "",
           emailErr : "",
-          genericErr : "",
+          fieldNotFilledErr : "",
           passwordErr : "",
           submitted : false
         }
@@ -24,7 +24,8 @@ export default class SignUpScreen extends Component {
     
       clearErrorMessages() {
         this.setState({emailErr : ""}),
-        this.setState({genericErr: ""})
+        this.setState({fieldNotFilledErr: ""}),
+        this.setState({passwordErr: ""})
       }
     
       signup() {
@@ -33,7 +34,7 @@ export default class SignUpScreen extends Component {
         const PASSWORD_REGEX = new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$')
         if (!(this.state.email && this.state.password && this.state.name && this.state.lastName ))
         {
-          this.setState({genericErr: "All fields must be filled"})
+          this.setState({fieldNotFilledErr: "All fields must be filled"})
           return
         }
     
@@ -55,7 +56,6 @@ export default class SignUpScreen extends Component {
       }
     
       render() {
-        console.log(Icon);
         return (
          <View style={styles.signupFormContainer}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
@@ -86,10 +86,10 @@ export default class SignUpScreen extends Component {
           </TouchableOpacity>
           <>
               {
-                this.state.genericErr &&
+                this.state.fieldNotFilledErr &&
                 <View style={GlobalStyle.errorBox}>
                   <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
-                  <Text style={GlobalStyle.errorText}>{this.state.genericErr}</Text>
+                  <Text style={GlobalStyle.errorText}>{this.state.fieldNotFilledErr}</Text>
                 </View>
               }
           </>
@@ -106,5 +106,5 @@ export default class SignUpScreen extends Component {
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%'
-      },
+      }
     });

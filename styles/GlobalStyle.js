@@ -1,12 +1,5 @@
 import { StyleSheet} from 'react-native';
 export default StyleSheet.create({
- container:{
-    flex: 1,
-    backgroundColor: '#1e9c6d',
-    alignItems: 'center',
-    justifyContent: 'center'
- },
-
  textInputBox:{
     backgroundColor: 'white',
     padding: 10,
@@ -18,6 +11,11 @@ export default StyleSheet.create({
  baseText: {
     fontSize: 18,
     fontWeight: 'normal'
+ },
+
+ titleText: {
+   fontSize: 24,
+   fontWeight: 'bold'
  },
 
  button: {
