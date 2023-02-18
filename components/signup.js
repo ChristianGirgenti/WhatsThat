@@ -56,7 +56,7 @@ export default class SignUpScreen extends Component {
     
       render() {
         return (
-         <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+         <View style={styles.signupFormContainer}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
@@ -81,7 +81,7 @@ export default class SignUpScreen extends Component {
                 <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.genericErr}</Text>
               }
           </>
-         </ScrollView>    
+         </View>    
       
         );
         
@@ -89,7 +89,10 @@ export default class SignUpScreen extends Component {
     }
     
     const styles = StyleSheet.create({
-      scrollViewStyle: {
+      signupFormContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%'
       },
     });

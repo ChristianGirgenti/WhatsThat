@@ -5,20 +5,19 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#1e9c6d',
     alignItems: 'center',
-    //padding: '25%',
     justifyContent: 'center'
  },
 
  textInputBox:{
     backgroundColor: 'white',
-    padding: 5,
-    marginVertical: 10,
+    padding: 10,
+    marginVertical: 15,
     borderRadius: 4,
-    width: '80%'
+    width:'74%'
 },
 
  baseText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'normal'
  },
 
@@ -28,10 +27,11 @@ export default StyleSheet.create({
     borderRadius: 4, 
     alignSelf: 'center',
     marginTop: 20,
+    width: '37%'
  },
 
  buttonText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
     alignSelf: 'center'
@@ -39,7 +39,8 @@ export default StyleSheet.create({
 
  errorText: {
     color: '#ed1c5c',
-    fontSize: 8
+    fontSize: 16,
+    fontWeight: 'bold'
   },
 
  errorBox:{
@@ -50,7 +51,7 @@ export default StyleSheet.create({
     backgroundColor: '#ffedf3',
     alignSelf: 'center',
     marginVertical: 10,
-    width: '100%',
-    padding: 3
+    width: '74%',
+    padding: 10
   }
 });
