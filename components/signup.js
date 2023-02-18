@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import GlobalStyle from '../styles/GlobalStyle';
 
 import * as EmailValidator from 'email-validator';
 
@@ -55,73 +56,40 @@ export default class SignUpScreen extends Component {
     
       render() {
         return (
-          <View style={styles.container}>
-            <View style={styles.textContainer}>
-                <Text>Insert Name: </Text>
-                <TextInput placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
-            </View>
-
-            <View style={styles.textContainer}>
-                <Text>Insert Last Name: </Text>
-                <TextInput style={styles.container} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
-            </View>
-
-            <View style={styles.textContainer}>
-                <Text>Insert Email: </Text>
-                <TextInput placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
-            </View>
+         <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
+            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
+            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
             <>
-                {this.state.emailErr && this.state.submitted &&
-                    <Text style={styles.errorText}>{this.state.emailErr}</Text>
-                }
+              {this.state.emailErr && this.state.submitted &&
+                  <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.emailErr}</Text>
+              }
             </>  
 
-            <View style={styles.textContainer}>
-              <Text>Insert Password: </Text>
-              <TextInput placeholder='Password' secureTextEntry='true' onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
-            </View>
-            <>
-                {this.state.passwordErr && this.state.submitted &&
-                  <Text style={styles.errorText}>{this.state.passwordErr}</Text>
-                }
-            </> 
-
-            <TouchableOpacity style={styles.buttonGreen} onPress={() => this.signup()}>
-                          <Text>Sign up</Text>
-            </TouchableOpacity>
-            <>
-                {
-                  this.state.genericErr &&
-                  <Text style={styles.errorText}>{this.state.genericErr}</Text>
-                }
-            </>
-          </View>
-        
+          <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
+          <>
+              {this.state.passwordErr && this.state.submitted &&
+                <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.passwordErr}</Text>
+              }
+          </> 
+          <TouchableOpacity style={GlobalStyle.button} onPress={() => this.signup()}>
+                        <Text style={GlobalStyle.buttonText}>Sign up</Text>
+          </TouchableOpacity>
+          <>
+              {
+                this.state.genericErr &&
+                <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.genericErr}</Text>
+              }
+          </>
+         </ScrollView>    
+      
         );
         
       }
     }
     
     const styles = StyleSheet.create({
-      container: {
-        alignItems: 'center',
-        fontSize: 14
+      scrollViewStyle: {
+        width: '100%'
       },
-      textContainer: {
-        flex: 1, 
-        flexDirection: 'row', 
-        alignItems: 'center'
-      },
-      buttonGreen: {
-        backgroundColor: 'green',
-        alignItems: 'center',
-        width: 80,
-        height: 30, 
-        marginTop: 20,
-        marginLeft: 20,
-        justifyContent: 'center'
-      },
-      errorText: {
-        color: 'red'
-      }
     });

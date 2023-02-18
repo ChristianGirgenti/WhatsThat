@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import SignUpScreen from './components/signup';
+import GlobalStyle from './styles/GlobalStyle';
 
 class App extends Component {
   constructor(props){
@@ -53,56 +54,13 @@ class App extends Component {
 
   render() {
     return (
-      <View>
-        {/* <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-          <Text>Insert Email: </Text>
-          <TextInput style={{flex: 1, flexDirection: 'row', alignItems: 'center'}} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
-          <>
-            {this.state.emailErr && this.state.submitted &&
-              <Text style={{color: 'red'}}>{this.state.emailErr}</Text>
-            }
-          </>  
-        </View>
-        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-          <Text>Insert Password: </Text>
-          <TextInput style={{flex: 1, flexDirection: 'row', alignItems: 'center'}} placeholder='Password' secureTextEntry='true' onChangeText={(password) => this.setState({password})} value={this.state.password} />
-          <>
-            {this.state.passwordErr && this.state.submitted &&
-              <Text style={{color: 'red'}}>{this.state.passwordErr}</Text>
-            }
-          </>  
-        </View>
-        <TouchableOpacity style={styles.buttonGreen} onPress={() => this.login()}>
-                      <Text>Log in</Text>
-        </TouchableOpacity>
-
-        <>
-            {
-              this.state.genericErr &&
-              <Text style={{color: 'red'}}>{this.state.genericErr}</Text>
-            }
-        </> */}
+      <View style={GlobalStyle.container}>
         <SignUpScreen />
       </View>
-    
     );
     
   }
 }
-
-const styles = StyleSheet.create({
-  buttonGreen: {
-    backgroundColor: 'green',
-    alignItems: 'center',
-    width: 80,
-    height: 30, 
-    marginTop: 20,
-    marginLeft: 20,
-    justifyContent: 'center'
-  },
-});
-
-
 
 export default App
 
