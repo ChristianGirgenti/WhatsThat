@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import * as EmailValidator from 'email-validator';
 
 
@@ -46,30 +46,39 @@ export default class SignUpScreen extends Component {
         if (!PASSWORD_REGEX.test(this.state.password))
         {
           if (this.state.password.length <8 || this.state.password.length > 30)
-            this.setState({passwordErr : "Invalid password length. The password must have a minimum of 8 characters and a maximum of 30."})
+            this.setState({passwordErr : "Invalid password length.\nThe password must have a minimum of 8 characters and a maximum of 30."})
           else
-            this.setState({passwordErr: "Invalid password. The password must have an uppercase letter, a lowercase letter, a special character and a number."})
+            this.setState({passwordErr: "Invalid password.\nThe password must have an uppercase letter, a lowercase letter, a special character and a number."})
           return
         }
         this.clearErrorMessages()
       }
     
       render() {
+        console.log(Icon);
         return (
          <View style={styles.signupFormContainer}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
             <>
-              {this.state.emailErr && this.state.submitted &&
-                  <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.emailErr}</Text>
+              {
+                this.state.emailErr && this.state.submitted &&
+                  <View style={GlobalStyle.errorBox}>
+                     <Icon name="times" size={20} color="red" style={GlobalStyle.errorIcon} />
+                     <Text style={GlobalStyle.errorText}>{this.state.emailErr}</Text>
+                  </View>
               }
             </>  
 
           <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
           <>
-              {this.state.passwordErr && this.state.submitted &&
-                <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.passwordErr}</Text>
+              {
+                this.state.passwordErr && this.state.submitted &&
+                <View style={GlobalStyle.errorBox}>
+                  <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                  <Text style={GlobalStyle.errorText}>{this.state.passwordErr}</Text>
+                </View>
               }
           </> 
           <TouchableOpacity style={GlobalStyle.button} onPress={() => this.signup()}>
@@ -78,7 +87,10 @@ export default class SignUpScreen extends Component {
           <>
               {
                 this.state.genericErr &&
-                <Text style={[GlobalStyle.errorBox, GlobalStyle.errorText]}>{this.state.genericErr}</Text>
+                <View style={GlobalStyle.errorBox}>
+                  <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                  <Text style={GlobalStyle.errorText}>{this.state.genericErr}</Text>
+                </View>
               }
           </>
          </View>    

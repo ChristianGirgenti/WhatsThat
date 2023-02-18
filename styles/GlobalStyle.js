@@ -1,5 +1,4 @@
 import { StyleSheet} from 'react-native';
-
 export default StyleSheet.create({
  container:{
     flex: 1,
@@ -40,10 +39,11 @@ export default StyleSheet.create({
  errorText: {
     color: '#ed1c5c',
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'normal'
   },
 
  errorBox:{
+    flexDirection: 'row',
     borderLeftColor: '#ed1c5c',
     borderColor: '#ffedf3',
     borderWidth: 1,
@@ -53,5 +53,10 @@ export default StyleSheet.create({
     marginVertical: 10,
     width: '74%',
     padding: 10
+  },
+
+  errorIcon: {
+    marginRight: 15,
+    alignSelf: 'center'
   }
 });
