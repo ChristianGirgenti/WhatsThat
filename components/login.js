@@ -16,6 +16,7 @@ export default class LogInScreen extends Component {
           wrongCredentialErr : "",
           submitted : false
         }
+
       }
     
       clearErrorMessages() {
@@ -36,11 +37,11 @@ export default class LogInScreen extends Component {
         this.clearErrorMessages()
       }
 
-      redirectToSignUp() {
-        console.log("This will redirect to the sign up form")
-      }
-    
+      
+
       render() {
+        const navigation = this.props.navigation;
+
         return (
          <View style={styles.loginFormContainer}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
@@ -61,21 +62,21 @@ export default class LogInScreen extends Component {
             </>
             <View style={[GlobalStyle.baseText, styles.redirectToSignUp]}>
                 <Text>Don't have an account?  </Text>
-                <Text onPress={() => this.redirectToSignUp()} style={styles.signUpText}>Sign up!!</Text>
+                <Text onPress={() => navigation.navigate('Signup')} style={styles.signUpText}>Sign up!!</Text>
             </View> 
         </View>    
       
         );
         
       }
-    }
-    
+    }    
     const styles = StyleSheet.create({
       loginFormContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        backgroundColor: 'green'
       },
       redirectToSignUp: {
         marginTop: 30,

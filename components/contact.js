@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { Text, StyleSheet, Image, TouchableOpacity, View} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 
 
@@ -16,9 +16,11 @@ export default class Contact extends Component {
    
       render() {
         return (
-            <TouchableOpacity style={styles.contactContainer} onPress={() => this.openContact()}>
-                <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/6522/6522516.png'}} style={styles.contactProfileImage} />
-                <Text style={[GlobalStyle.baseText, styles.contactText]}>{this.props.name} {this.props.lastName}</Text>
+            <TouchableOpacity  onPress={() => this.openContact()}>
+                <View style={styles.contactContainer}>
+                    <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/6522/6522516.png'}} style={styles.contactProfileImage} />
+                    <Text style={[GlobalStyle.baseText, styles.contactText]}>{this.props.name} {this.props.lastName}</Text>
+                </View>
             </TouchableOpacity>      
         );
         
@@ -27,12 +29,13 @@ export default class Contact extends Component {
     
     const styles = StyleSheet.create({
         contactContainer: {
+            flex: 1,
             flexDirection: 'row',
             backgroundColor: 'orange',
             borderRadius: 4,
             justifyContent: 'flex-start',
             alignItems: 'center',
-            width: 300,
+            marginHorizontal: 20,
             marginBottom: 10
         },
         contactProfileImage: {

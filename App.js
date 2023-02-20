@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {View, StyleSheet} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LogInScreen from './components/login';
 import SignUpScreen from './components/signup';
 import Contact from './components/contact';
@@ -10,23 +12,25 @@ class App extends Component {
     super(props); 
   }
 
-
-  //QUESTION 1: IS IT BETTER TO GIVE A FIX WIDTH OR USE % FOR TEXT INPUT FORM?
-  //QUESTION 2: SCROLLVIEW DID NOT ALLOWE ME TO USE FLEX PROPERLY. CAN I USE NORMAL VIEW FOR THE LOGIN AND SIGN UP FORM ?
   render() {
     return (
-      <View style={styles.mainContainer}>
-        {/* <SignUpScreen /> */}
-        {/* <LogInScreen /> */}
-        {/* <Contact /> */}
-        <DisplayContacts />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LogInScreen} />
+          <Stack.Screen name="Signup" component={SignUpScreen} />
+        </Stack.Navigator>
+          {/* <Contact /> */}
+          {/* <DisplayContacts style={styles.mainContainer} /> */}
+      </NavigationContainer>
+    
     );
     
   }
 }
 
 export default App
+
+const Stack = createNativeStackNavigator();
 
 const styles = StyleSheet.create({
   mainContainer: {

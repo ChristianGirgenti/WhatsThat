@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet} from 'react-native';
+import { View, Text, FlatList, StyleSheet, ScrollView} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Contact from './contact';
 
@@ -44,8 +44,7 @@ export default class DisplayContacts extends Component{
                         renderItem= {this.renderItem}
                         keyExtractor={(item,index) => index.toString()}
                     />
-                </View>
-                
+                </View>        
             </View>
         )
     }
@@ -53,7 +52,11 @@ export default class DisplayContacts extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        width: "100%",
+        backgroundColor: '#1e9c6d',
+        // alignItems: 'center',
+        // justifyContent: 'center'
     },  
     listWrapper: {
         flex: 15,
