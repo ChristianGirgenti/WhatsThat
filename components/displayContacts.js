@@ -44,7 +44,7 @@ export default class DisplayContacts extends Component{
                         renderItem= {this.renderItem}
                         keyExtractor={(item,index) => index.toString()}
                     />
-                </View>        
+                </View>       
             </View>
         )
     }

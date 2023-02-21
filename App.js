@@ -8,6 +8,7 @@ import Contact from './components/contact';
 import DisplayContacts from './components/displayContacts'
 import PreviewConversation from './components/previewConversation';
 import DisplayConversations from './components/displayConversation';
+import Conversation from './components/conversation';
 
 class App extends Component {
   constructor(props){
@@ -23,7 +24,8 @@ class App extends Component {
           {/* <Stack.Screen name="Login" component={LogInScreen} />
           <Stack.Screen name="Signup" component={SignUpScreen} /> */}
           {/* <Stack.Screen name="DisplayContact" component={DisplayContacts} /> */}
-          <Stack.Screen name="Home" component={DisplayConversations} />
+          {/* <Stack.Screen name="Home" component={DisplayConversations} /> */}
+          <Stack.Screen name="Conversation" component={Conversation} />
         </Stack.Navigator>
       </NavigationContainer>
     
