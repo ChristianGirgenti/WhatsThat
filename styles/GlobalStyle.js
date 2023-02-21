@@ -1,5 +1,11 @@
 import { StyleSheet} from 'react-native';
 export default StyleSheet.create({
+ mainContainer:{
+   flex: 1,
+   width: "100%",
+   backgroundColor: '#e1e1e1',
+ },
+
  textInputBox:{
     backgroundColor: 'white',
     padding: 10,

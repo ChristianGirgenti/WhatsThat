@@ -43,7 +43,7 @@ export default class LogInScreen extends Component {
         const navigation = this.props.navigation;
 
         return (
-         <View style={styles.loginFormContainer}>
+         <View style={[GlobalStyle.mainContainer, styles.loginFormContainer]}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
 
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
@@ -72,11 +72,8 @@ export default class LogInScreen extends Component {
     }    
     const styles = StyleSheet.create({
       loginFormContainer: {
-        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        backgroundColor: 'green'
+        alignItems: 'center'     
       },
       redirectToSignUp: {
         marginTop: 30,
@@ -85,6 +82,6 @@ export default class LogInScreen extends Component {
       },
       signUpText: {
         fontWeight: 'bold',
-        textDecorationLine: 'underline',
+        textDecorationLine: 'underline'
       }
     });

@@ -31,7 +31,7 @@ export default class Contact extends Component {
         contactContainer: {
             flex: 1,
             flexDirection: 'row',
-            backgroundColor: 'orange',
+            backgroundColor: 'white',
             borderRadius: 4,
             justifyContent: 'flex-start',
             alignItems: 'center',
@@ -41,7 +41,7 @@ export default class Contact extends Component {
         contactProfileImage: {
             alignSelf: 'flex-start',
             width: 50,
-            height: 50,
+            height: 50
         },
         contactText: {
             marginLeft: 5,

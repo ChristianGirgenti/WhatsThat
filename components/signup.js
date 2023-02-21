@@ -53,11 +53,14 @@ export default class SignUpScreen extends Component {
           return
         }
         this.clearErrorMessages()
+        return navigation.navigate('Login')
       }
     
       render() {
+        const navigation = this.props.navigation;
+
         return (
-         <View style={styles.signupFormContainer}>
+         <View style={[GlobalStyle.mainContainer, styles.signupFormContainer]}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
@@ -102,10 +105,7 @@ export default class SignUpScreen extends Component {
     
     const styles = StyleSheet.create({
       signupFormContainer: {
-        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        backgroundColor: 'green'
+        alignItems: 'center'
       }
     });

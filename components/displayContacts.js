@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, FlatList, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Contact from './contact';
 
@@ -36,7 +36,7 @@ export default class DisplayContacts extends Component{
 
     render(){
         return(
-            <View style={styles.container}>
+            <View style={GlobalStyle.mainContainer}>
                 <Text style={[GlobalStyle.titleText, styles.title]}>My contacts</Text>
                 <View style={styles.listWrapper}>
                     <FlatList 
@@ -51,13 +51,6 @@ export default class DisplayContacts extends Component{
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: "100%",
-        backgroundColor: '#1e9c6d',
-        // alignItems: 'center',
-        // justifyContent: 'center'
-    },  
     listWrapper: {
         flex: 15,
     },
@@ -66,8 +59,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         flex: 1,
         padding: 5,
-        marginTop: 50,
-        marginBottom: 20,
+        marginTop: 20,
+        marginBottom: 10,
         textAlign: 'center'
     },
 })

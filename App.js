@@ -6,6 +6,8 @@ import LogInScreen from './components/login';
 import SignUpScreen from './components/signup';
 import Contact from './components/contact';
 import DisplayContacts from './components/displayContacts'
+import PreviewConversation from './components/previewConversation';
+import DisplayConversations from './components/displayConversation';
 
 class App extends Component {
   constructor(props){
@@ -13,14 +15,16 @@ class App extends Component {
   }
 
   render() {
+    const Stack = createNativeStackNavigator();
+
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={LogInScreen} />
-          <Stack.Screen name="Signup" component={SignUpScreen} />
+          {/* <Stack.Screen name="Login" component={LogInScreen} />
+          <Stack.Screen name="Signup" component={SignUpScreen} /> */}
+          {/* <Stack.Screen name="DisplayContact" component={DisplayContacts} /> */}
+          <Stack.Screen name="Home" component={DisplayConversations} />
         </Stack.Navigator>
-          {/* <Contact /> */}
-          {/* <DisplayContacts style={styles.mainContainer} /> */}
       </NavigationContainer>
     
     );
@@ -30,15 +34,5 @@ class App extends Component {
 
 export default App
 
-const Stack = createNativeStackNavigator();
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: '#1e9c6d',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-});
 
 
