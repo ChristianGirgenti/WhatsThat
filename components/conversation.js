@@ -1,6 +1,5 @@
 import React, {Component } from 'react';
-import {View, FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import { TextInput } from 'react-native-web';
+import {View, FlatList, StyleSheet, Text, TouchableOpacity, Image, TextInput} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Message from './message';
 
@@ -30,8 +29,6 @@ export default class Conversation extends Component{
     }
 
     renderItem = ({item}) => {
-        console.log("hi")
-        console.log(item)
         return <Message name={item.name} message={item.message} user_id={item.user_id} />
     }
 
@@ -54,9 +51,17 @@ export default class Conversation extends Component{
                     />
                 </View>
                 <View style={styles.sendMessageContainer}>
-                    <TextInput style={styles.messageBox} placeholder="Message" onChangeText={(message) => this.setState({message})} value={this.state.message} />
-                    <TouchableOpacity style={[GlobalStyle.button, styles.sendButton]} onPress={() => this.send()}>
-                        <Text style={GlobalStyle.buttonText}>Send</Text>
+                    {/* TEXT INPUT DOESN'T STRETCH IN HEIGHT SO I HAVE A MAX LENGHT OF 70 TO GIVE A BETTER USEr experience */}
+                    <TextInput
+                        multiline={true} 
+                        style={styles.messageBox} 
+                        placeholder="Message" 
+                        onChangeText={(message) => this.setState({message})} 
+                        value={this.state.message}
+                        maxLength={70}
+                        />
+                    <TouchableOpacity style={styles.sendButton} onPress={() => this.send()}>
+                        <Image style={styles.sendMessageImage} source={require('../img/sendIcon.png')} />
                     </TouchableOpacity>
                 </View>        
             </View>
@@ -73,22 +78,30 @@ const styles = StyleSheet.create({
         backgroundColor: '#25D366',
         justifyContent: 'center',
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        padding: 10
     },
     sendMessageContainer: {
-        flex:1,
+        flex:2,
         flexDirection: 'row',
         backgroundColor: '#25D366',
+        alignItems: 'stretch'
     },
     messageBox :{
         flex: 1,
         justifyContent: 'flex-start',
         alignContent: 'flex-start',
-        fontSize: 18
+        fontSize: 18,
+        padding:6,
+        textAlignVertical: 'top'
     },
-    sendButton: {
-        width: 100,
-        marginTop: 0
+    sendButton:{
+
+    },
+    sendMessageImage:{
+        width: 64,
+        height: 64,
+        alignSelf: 'center'
     }
 })
 
