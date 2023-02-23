@@ -27,21 +27,20 @@ export default class SignUpScreen extends Component {
         this.setState({genericErr: ""}),
         this.setState({passwordErr: ""})
       }
-    
-      signup() {
-        this.clearErrorMessages()
-        this.setState({submitted : true})
+      
+      validateInputForms(){
+        console.log("1")
         const PASSWORD_REGEX = new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$')
         if (!(this.state.email && this.state.password && this.state.name && this.state.lastName ))
         {
           this.setState({genericErr: "All fields must be filled"})
-          return
+          return false
         }
     
         if (!(EmailValidator.validate(this.state.email)))
         {
           this.setState({emailErr: "Email not valid"})
-          return
+          return false
         }
     
         if (!PASSWORD_REGEX.test(this.state.password))
@@ -50,9 +49,18 @@ export default class SignUpScreen extends Component {
             this.setState({passwordErr : "Invalid password length.\nThe password must have a minimum of 8 characters and a maximum of 30."})
           else
             this.setState({passwordErr: "Invalid password.\nThe password must have an uppercase letter, a lowercase letter, a special character and a number."})
-          return
+          return false
         }
-
+        console.log("lastr")
+        return true
+      }
+    
+      signup() {
+        this.clearErrorMessages()
+        this.setState({submitted : true})
+        if (!this.validateInputForms()) return
+      
+        console.log("gfi")
         let to_send = {
             first_name: this.state.name,
             last_name: this.state.lastName,
@@ -67,8 +75,8 @@ export default class SignUpScreen extends Component {
         })
         .then((response) => {
           if (response.status == 201) {
-            Alert.alert("Account created");
-            console.log("Account created");
+            //TRY TO APPLU TOAST.
+            // DO I STILL NEED TO CLEAR ERRORS? 
             this.clearErrorMessages()
             return navigation.navigate('Login')
           }
