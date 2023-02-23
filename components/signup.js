@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as EmailValidator from 'email-validator';
@@ -16,7 +16,7 @@ export default class SignUpScreen extends Component {
           email : "",
           password : "",
           emailErr : "",
-          fieldNotFilledErr : "",
+          genericErr : "",
           passwordErr : "",
           submitted : false
         }
@@ -24,7 +24,7 @@ export default class SignUpScreen extends Component {
     
       clearErrorMessages() {
         this.setState({emailErr : ""}),
-        this.setState({fieldNotFilledErr: ""}),
+        this.setState({genericErr: ""}),
         this.setState({passwordErr: ""})
       }
     
@@ -34,7 +34,7 @@ export default class SignUpScreen extends Component {
         const PASSWORD_REGEX = new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$')
         if (!(this.state.email && this.state.password && this.state.name && this.state.lastName ))
         {
-          this.setState({fieldNotFilledErr: "All fields must be filled"})
+          this.setState({genericErr: "All fields must be filled"})
           return
         }
     
@@ -52,8 +52,36 @@ export default class SignUpScreen extends Component {
             this.setState({passwordErr: "Invalid password.\nThe password must have an uppercase letter, a lowercase letter, a special character and a number."})
           return
         }
-        this.clearErrorMessages()
-        return navigation.navigate('Login')
+
+        let to_send = {
+            first_name: this.state.name,
+            last_name: this.state.lastName,
+            email: this.state.email,
+            password: this.state.password
+        };
+        return fetch("http://localhost:3333/api/1.0.0/user",
+        {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(to_send)
+        })
+        .then((response) => {
+          if (response.status == 201) {
+            Alert.alert("Account created");
+            console.log("Account created");
+            this.clearErrorMessages()
+            return navigation.navigate('Login')
+          }
+          else if (response.status == 400) {
+            throw "Some of the data inserted are not correct. Please check the data again";
+          }
+          else {
+            throw "Something went wrong while creating the account. Please try again";
+          }
+        })
+        .catch((error) => {
+          this.setState({genericErr: error})
+        })
       }
     
       render() {
@@ -89,10 +117,10 @@ export default class SignUpScreen extends Component {
           </TouchableOpacity>
           <>
               {
-                this.state.fieldNotFilledErr &&
+                this.state.genericErr &&
                 <View style={GlobalStyle.errorBox}>
                   <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
-                  <Text style={GlobalStyle.errorText}>{this.state.fieldNotFilledErr}</Text>
+                  <Text style={GlobalStyle.errorText}>{this.state.genericErr}</Text>
                 </View>
               }
           </>

@@ -21,11 +21,11 @@ class App extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          {/* <Stack.Screen name="Login" component={LogInScreen} />
-          <Stack.Screen name="Signup" component={SignUpScreen} /> */}
+          <Stack.Screen name="Login" component={LogInScreen} />
+          <Stack.Screen name="Signup" component={SignUpScreen} />
           {/* <Stack.Screen name="DisplayContact" component={DisplayContacts} /> */}
           {/* <Stack.Screen name="Home" component={DisplayConversations} /> */}
-          <Stack.Screen name="Conversation" component={Conversation} />
+          {/* <Stack.Screen name="Conversation" component={Conversation} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     
