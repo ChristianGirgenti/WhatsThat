@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import DisplayContacts from './displayContacts';
 import DisplayConversations from './displayConversation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ConversationScreen from './conversationScreen';
 const Tab = createBottomTabNavigator();
 
 export default class Home extends Component{
@@ -18,7 +19,7 @@ export default class Home extends Component{
                     tabBarActiveTintColor: 'black',      
                 }}
             >
-                <Tab.Screen name="Conversations" component={DisplayConversations} options={{
+                <Tab.Screen name="Conversations" component={ConversationScreen} options={{
                     tabBarIcon: ({color}) => (
                         <Icon name="chat" color={color} size={26}/>
                     )

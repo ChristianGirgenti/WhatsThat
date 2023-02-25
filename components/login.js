@@ -8,8 +8,6 @@ export default class LogInScreen extends Component {
 
     constructor(props){
         super(props);
-        const navigation = this.props.navigation;
-
     
         this.state = {
           email : "",

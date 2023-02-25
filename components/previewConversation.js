@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, Image, TouchableOpacity, View} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-
-
+import { useNavigation } from '@react-navigation/native';
 export default class PreviewConversation extends Component {
 
     constructor(props){
@@ -12,6 +11,7 @@ export default class PreviewConversation extends Component {
       openConversation(){
         console.log(this.props.name)
         console.log(this.props.conversation)
+        this.props.navigation.navigate('Conversation')
       }
   
    
@@ -24,8 +24,6 @@ export default class PreviewConversation extends Component {
                     <View style={styles.textContainer}>
                         <Text style={[GlobalStyle.baseText, styles.contactNameText]}>{this.props.name} {this.props.lastName}</Text>
                         <Text numberOfLines={1} style={[GlobalStyle.baseText, styles.previewConversationText]}>{this.props.conversation}</Text>
-                        {/* <Text style={styles.contactNameText}>Christian Girgenti</Text> */}
-                        {/* <Text numberOfLines={1} style={[GlobalStyle.baseText, styles.previewConversationText]}>This is a preview test and I want the text to not show anymore if too long because this is what I decided</Text> */}
                     </View>
                 
                 </View>

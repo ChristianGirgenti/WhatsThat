@@ -25,9 +25,6 @@ class App extends Component {
           <Stack.Screen name="Login" component={LogInScreen} />
           <Stack.Screen name="Signup" component={SignUpScreen} />
           <Stack.Screen name="Home" component={Home} options={{ headerShown: false}} />
-          {/* <Stack.Screen name="DisplayContact" component={DisplayContacts} /> */}
-          {/* <Stack.Screen name="DisplayConversation" component={DisplayConversations} /> */}
-          {/* <Stack.Screen name="Conversation" component={Conversation} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     
@@ -38,5 +35,7 @@ class App extends Component {
 
 export default App
 
-
+//CURRENT ISSUES:
+//TOASTER NOT WORKING ON SIGN UP SUCCESS.
+//HEADER DUPLICATES WHEN CLICKING ON A CONVERSATION PREVIEW
 
