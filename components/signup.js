@@ -55,7 +55,6 @@ export default class SignUpScreen extends Component {
     
       signup() {
         const navigation = this.props.navigation;
-
         this.clearErrorMessages()
         this.setState({submitted : true})
         if (!this.validateInputForms()) return
@@ -75,16 +74,13 @@ export default class SignUpScreen extends Component {
         .then((response) => {
           if (response.status == 201) {
             //TRY TO APPLU TOAST.
-            // DO I STILL NEED TO CLEAR ERRORS? 
-            this.clearErrorMessages()
             return navigation.navigate('Login')
           }
-          else if (response.status == 400) {
+          else if (response.status == 400) 
             throw "Some of the data inserted are not correct. Please check the data again";
-          }
-          else {
+          else 
             throw "Something went wrong while creating the account. Please try again";
-          }
+            
         })
         .catch((error) => {
           this.setState({genericErr: error})
