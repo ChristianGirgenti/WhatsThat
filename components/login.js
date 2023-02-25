@@ -8,6 +8,8 @@ export default class LogInScreen extends Component {
 
     constructor(props){
         super(props);
+        const navigation = this.props.navigation;
+
     
         this.state = {
           email : "",
@@ -24,6 +26,7 @@ export default class LogInScreen extends Component {
       }
     
       login() {
+
         this.clearErrorMessages()
         this.setState({submitted : true})
         if (!(this.state.email && this.state.password))
@@ -35,13 +38,12 @@ export default class LogInScreen extends Component {
         //DONT NEED TO VALIDATE EMAIL AND PASSWORD AS WE CAN JUST CHECK IF THE LOGIN IS SUCCESSFULL OR NOT
         // IF NOT SUCCESSFULL, GIVE A VALUE TO WRONGCREDENTIALERROR
         this.clearErrorMessages()
+        return this.props.navigation.navigate('Home')
       }
 
       
 
       render() {
-        const navigation = this.props.navigation;
-
         return (
          <View style={[GlobalStyle.mainContainer, styles.loginFormContainer]}>
             <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
@@ -62,7 +64,7 @@ export default class LogInScreen extends Component {
             </>
             <View style={[GlobalStyle.baseText, styles.redirectToSignUp]}>
                 <Text>Don't have an account?  </Text>
-                <Text onPress={() => navigation.navigate('Signup')} style={styles.signUpText}>Sign up!!</Text>
+                <Text onPress={() => this.props.navigation.navigate('Signup')} style={styles.signUpText}>Sign up!!</Text>
             </View> 
         </View>    
       

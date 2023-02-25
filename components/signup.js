@@ -29,7 +29,6 @@ export default class SignUpScreen extends Component {
       }
       
       validateInputForms(){
-        console.log("1")
         const PASSWORD_REGEX = new RegExp('^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$')
         if (!(this.state.email && this.state.password && this.state.name && this.state.lastName ))
         {
@@ -51,16 +50,16 @@ export default class SignUpScreen extends Component {
             this.setState({passwordErr: "Invalid password.\nThe password must have an uppercase letter, a lowercase letter, a special character and a number."})
           return false
         }
-        console.log("lastr")
         return true
       }
     
       signup() {
+        const navigation = this.props.navigation;
+
         this.clearErrorMessages()
         this.setState({submitted : true})
         if (!this.validateInputForms()) return
       
-        console.log("gfi")
         let to_send = {
             first_name: this.state.name,
             last_name: this.state.lastName,
@@ -93,7 +92,6 @@ export default class SignUpScreen extends Component {
       }
     
       render() {
-        const navigation = this.props.navigation;
 
         return (
          <View style={[GlobalStyle.mainContainer, styles.signupFormContainer]}>
