@@ -23,23 +23,21 @@ export default class LogInScreen extends Component {
         this.setState({fieldNotFilledErr: ""})
       }
     
-      login() {
-
-        this.clearErrorMessages()
-        this.setState({submitted : true})
+      validateFields() {
         if (!(this.state.email && this.state.password))
         {
           this.setState({fieldNotFilledErr: "All fields must be filled"})
-          return
+          return false;
         }
-        
-        //DONT NEED TO VALIDATE EMAIL AND PASSWORD AS WE CAN JUST CHECK IF THE LOGIN IS SUCCESSFULL OR NOT
-        // IF NOT SUCCESSFULL, GIVE A VALUE TO WRONGCREDENTIALERROR
-        this.clearErrorMessages()
-        return this.props.navigation.navigate('Home')
+        return true;
       }
 
-      
+      login() {
+        this.clearErrorMessages()
+        this.setState({submitted : true})
+        if (!this.validateFields()) return
+        return this.props.navigation.navigate('Home')
+      }
 
       render() {
         return (

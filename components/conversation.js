@@ -51,7 +51,6 @@ export default class Conversation extends Component{
                     />
                 </View>
                 <View style={styles.sendMessageContainer}>
-                    {/* TEXT INPUT DOESN'T STRETCH IN HEIGHT SO I HAVE A MAX LENGHT OF 70 TO GIVE A BETTER USEr experience */}
                     <TextInput
                         multiline={true} 
                         style={styles.messageBox} 

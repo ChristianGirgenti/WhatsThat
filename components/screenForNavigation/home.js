@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { Component } from 'react';
-import DisplayContacts from './displayContacts';
-import DisplayConversations from './displayConversation';
+import DisplayContacts from '../displayContacts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ConversationScreen from './conversationScreen';
+
 const Tab = createBottomTabNavigator();
 
 export default class Home extends Component{

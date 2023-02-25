@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
-import {View, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LogInScreen from './components/login';
 import SignUpScreen from './components/signup';
-import Contact from './components/contact';
-import DisplayContacts from './components/displayContacts'
-import PreviewConversation from './components/previewConversation';
-import DisplayConversations from './components/displayConversation';
-import Conversation from './components/conversation';
-import Home from './components/home';
+import Home from './components/screenForNavigation/home';
 
 class App extends Component {
   constructor(props){
@@ -38,4 +32,12 @@ export default App
 //CURRENT ISSUES:
 //TOASTER NOT WORKING ON SIGN UP SUCCESS.
 //HEADER DUPLICATES WHEN CLICKING ON A CONVERSATION PREVIEW
+//NOT SURE WHERE TO DECLERE THE CONST NAVIGATION
+
+
+//TO DO:
+//ADDING SOMETHING TO LOG OUT TO THE HOME PAGE IN THE BOTTOM TAB MAYBE?
+//CREATE PAGE TO EDIT OWN DETAILS
+//CREATE PAGE TO EDIT CONTACT DETAILS
+
 
