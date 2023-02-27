@@ -8,8 +8,6 @@ export default class PreviewConversation extends Component {
       }
 
       openConversation(){
-        console.log(this.props.name)
-        console.log(this.props.conversation)
         this.props.navigation.navigate('Conversation')
       }
   

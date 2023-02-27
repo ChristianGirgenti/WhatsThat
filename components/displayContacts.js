@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Contact from './contact';
+import NavigationHeader from './screenForNavigation/navigationHeader';
 
 export default class DisplayContacts extends Component{
 
@@ -37,9 +38,8 @@ export default class DisplayContacts extends Component{
     render(){
         return(
             <View style={GlobalStyle.mainContainer}>
-                <View style={GlobalStyle.navigationHeaderSection}>
-                    <Text style={GlobalStyle.navigationHeaderTitle}>My Contacts</Text>
-                </View>
+                <NavigationHeader title="My Contacts" />
+
                 <View style={styles.listWrapper}>
                     <FlatList 
                         data={this.state.contacts}

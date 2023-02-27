@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native
 import GlobalStyle from '../styles/GlobalStyle';
 import * as EmailValidator from 'email-validator';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 
 
 
@@ -22,7 +23,9 @@ export default class SignUpScreen extends Component {
           submitted : false
         }
       }
-    
+      
+
+
       clearErrorMessages() {
         this.setState({emailErr : ""}),
         this.setState({genericErr: ""}),
@@ -55,7 +58,6 @@ export default class SignUpScreen extends Component {
       }
     
       signup() {
-        const navigation = this.props.navigation;
         this.clearErrorMessages()
         this.setState({submitted : true})
         if (!this.validateInputForms()) return
@@ -75,7 +77,7 @@ export default class SignUpScreen extends Component {
         .then((response) => {
           if (response.status == 201) {
             //TRY TO APPLU TOAST.
-            return navigation.navigate('Login')
+            return this.props.navigation.navigate('Login')
           }
           else if (response.status == 400) 
             throw "Some of the data inserted are not correct. Please check the data again";
@@ -92,12 +94,7 @@ export default class SignUpScreen extends Component {
 
         return (
          <View style={GlobalStyle.mainContainer}>
-            <View style={[GlobalStyle.navigationHeaderSection, styles.titleHeaderSection]}>
-                <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                    <Icon name="arrow-left-bold-outline" color={'black'} size={32} />
-                </TouchableOpacity>
-                <Text style={[GlobalStyle.navigationHeaderTitle, styles.titleText]}>Sign up</Text>
-            </View>
+            <NavigationHeaderWithIcon navigation={this.props.navigation} title="Sign Up"/>
             <View style={ styles.signupFormContainer}>
               <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
               <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
@@ -141,17 +138,12 @@ export default class SignUpScreen extends Component {
         
       }
     }
-    
+  
+
     const styles = StyleSheet.create({
       signupFormContainer: {
         justifyContent: 'center',
         alignItems: 'center',
         flex: 15
       },
-      titleHeaderSection: {
-        justifyContent: 'flex-start'
-      },
-      titleText: {
-        flex: 0.9
-     }
     });

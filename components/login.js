@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import NavigationHeader from './screenForNavigation/navigationHeader';
 
 
 export default class LogInScreen extends Component {
@@ -42,9 +43,8 @@ export default class LogInScreen extends Component {
       render() {
         return (
          <View style={GlobalStyle.mainContainer}>
-            <View style={GlobalStyle.navigationHeaderSection}>
-                    <Text style={GlobalStyle.navigationHeaderTitle}>Login</Text>
-            </View>
+            <NavigationHeader title="Login" />
+
             <View style={styles.loginFormContainer}>
                 <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, StyleSheet, Text} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import PreviewConversation from './previewConversation';
+import NavigationHeader from './screenForNavigation/navigationHeader';
 
 export default class DisplayConversations extends Component{
 
@@ -26,9 +27,7 @@ export default class DisplayConversations extends Component{
     render(){
         return(
             <View style={GlobalStyle.mainContainer}>
-                <View style={GlobalStyle.navigationHeaderSection}>
-                    <Text style={GlobalStyle.navigationHeaderTitle}>Conversations</Text>
-                </View>
+                <NavigationHeader title="Conversations" />
                 <View style={styles.listWrapper}>
                     <FlatList 
                         data={this.state.conversations}

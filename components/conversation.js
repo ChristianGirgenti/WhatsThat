@@ -3,6 +3,7 @@ import {View, FlatList, StyleSheet, Text, TouchableOpacity, Image, TextInput} fr
 import GlobalStyle from '../styles/GlobalStyle';
 import Message from './message';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 
 
 export default class Conversation extends Component{
@@ -41,12 +42,7 @@ export default class Conversation extends Component{
     render(){
         return(
             <View style={GlobalStyle.mainContainer}>
-                <View style={[GlobalStyle.navigationHeaderSection, styles.titleHeaderSection]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                        <Icon name="arrow-left-bold-outline" color={'black'} size={32} />
-                    </TouchableOpacity>
-                    <Text style={[GlobalStyle.navigationHeaderTitle, styles.titleText]}>Ronan</Text>
-                </View>
+                <NavigationHeaderWithIcon navigation={this.props.navigation} title="Ronan" />
 
                 <View style={styles.listWrapper}>
                     <FlatList 
