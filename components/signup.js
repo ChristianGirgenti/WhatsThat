@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import * as EmailValidator from 'email-validator';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 
 export default class SignUpScreen extends Component {
@@ -90,42 +91,50 @@ export default class SignUpScreen extends Component {
       render() {
 
         return (
-         <View style={[GlobalStyle.mainContainer, styles.signupFormContainer]}>
-            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
-            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
-            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
-            <>
-              {
-                this.state.emailErr && this.state.submitted &&
-                  <View style={GlobalStyle.errorBox}>
-                     <Icon name="times" size={20} color="red" style={GlobalStyle.errorIcon} />
-                     <Text style={GlobalStyle.errorText}>{this.state.emailErr}</Text>
-                  </View>
-              }
-            </>  
+         <View style={GlobalStyle.mainContainer}>
+            <View style={[GlobalStyle.navigationHeaderSection, styles.titleHeaderSection]}>
+                <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                    <Icon name="arrow-left-bold-outline" color={'black'} size={32} />
+                </TouchableOpacity>
+                <Text style={[GlobalStyle.navigationHeaderTitle, styles.titleText]}>Sign up</Text>
+            </View>
+            <View style={ styles.signupFormContainer}>
+              <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='First name' onChangeText={(name) => this.setState({name})} value={this.state.name} /> 
+              <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Last name' onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName} />
+              <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
+              <>
+                {
+                  this.state.emailErr && this.state.submitted &&
+                    <View style={GlobalStyle.errorBox}>
+                      <Icon name="times" size={20} color="red" style={GlobalStyle.errorIcon} />
+                      <Text style={GlobalStyle.errorText}>{this.state.emailErr}</Text>
+                    </View>
+                }
+              </>  
 
-          <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
-          <>
-              {
-                this.state.passwordErr && this.state.submitted &&
-                <View style={GlobalStyle.errorBox}>
-                  <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
-                  <Text style={GlobalStyle.errorText}>{this.state.passwordErr}</Text>
-                </View>
-              }
-          </> 
-          <TouchableOpacity style={GlobalStyle.button} onPress={() => this.signup()}>
-                        <Text style={GlobalStyle.buttonText}>Sign up</Text>
-          </TouchableOpacity>
-          <>
-              {
-                this.state.genericErr &&
-                <View style={GlobalStyle.errorBox}>
-                  <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
-                  <Text style={GlobalStyle.errorText}>{this.state.genericErr}</Text>
-                </View>
-              }
-          </>
+            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
+            <>
+                {
+                  this.state.passwordErr && this.state.submitted &&
+                  <View style={GlobalStyle.errorBox}>
+                    <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                    <Text style={GlobalStyle.errorText}>{this.state.passwordErr}</Text>
+                  </View>
+                }
+            </> 
+            <TouchableOpacity style={GlobalStyle.button} onPress={() => this.signup()}>
+                          <Text style={GlobalStyle.buttonText}>Sign up</Text>
+            </TouchableOpacity>
+            <>
+                {
+                  this.state.genericErr &&
+                  <View style={GlobalStyle.errorBox}>
+                    <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                    <Text style={GlobalStyle.errorText}>{this.state.genericErr}</Text>
+                  </View>
+                }
+            </>
+            </View>           
          </View>    
       
         );
@@ -136,6 +145,13 @@ export default class SignUpScreen extends Component {
     const styles = StyleSheet.create({
       signupFormContainer: {
         justifyContent: 'center',
-        alignItems: 'center'
-      }
+        alignItems: 'center',
+        flex: 15
+      },
+      titleHeaderSection: {
+        justifyContent: 'flex-start'
+      },
+      titleText: {
+        flex: 0.9
+     }
     });

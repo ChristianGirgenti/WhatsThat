@@ -2,6 +2,8 @@ import React, {Component } from 'react';
 import {View, FlatList, StyleSheet, Text, TouchableOpacity, Image, TextInput} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Message from './message';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 export default class Conversation extends Component{
 
@@ -39,8 +41,11 @@ export default class Conversation extends Component{
     render(){
         return(
             <View style={GlobalStyle.mainContainer}>
-                <View style={styles.titleContainer}>
-                    <Text style={GlobalStyle.titleText}>Ronan</Text>
+                <View style={[GlobalStyle.navigationHeaderSection, styles.titleHeaderSection]}>
+                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                        <Icon name="arrow-left-bold-outline" color={'black'} size={32} />
+                    </TouchableOpacity>
+                    <Text style={[GlobalStyle.navigationHeaderTitle, styles.titleText]}>Ronan</Text>
                 </View>
 
                 <View style={styles.listWrapper}>
@@ -59,8 +64,8 @@ export default class Conversation extends Component{
                         value={this.state.message}
                         maxLength={70}
                         />
-                    <TouchableOpacity style={styles.sendButton} onPress={() => this.send()}>
-                        <Image style={styles.sendMessageImage} source={require('../img/sendIcon.png')} />
+                    <TouchableOpacity onPress={() => this.send()}>
+                        <Icon name="send" color={'black'} size={40} />
                     </TouchableOpacity>
                 </View>        
             </View>
@@ -71,14 +76,6 @@ export default class Conversation extends Component{
 const styles = StyleSheet.create({
     listWrapper: {
         flex: 15
-    },
-    titleContainer: {
-        flex:1,
-        backgroundColor: '#25D366',
-        justifyContent: 'center',
-        textAlign: 'center',
-        marginBottom: 20,
-        padding: 10
     },
     sendMessageContainer: {
         flex:2,
@@ -94,13 +91,11 @@ const styles = StyleSheet.create({
         padding:6,
         textAlignVertical: 'top'
     },
-    sendButton:{
-
+    titleHeaderSection: {
+        justifyContent: 'flex-start'
     },
-    sendMessageImage:{
-        width: 64,
-        height: 64,
-        alignSelf: 'center'
+    titleText: {
+        flex: 0.9
     }
 })
 

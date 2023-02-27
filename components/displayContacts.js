@@ -37,7 +37,9 @@ export default class DisplayContacts extends Component{
     render(){
         return(
             <View style={GlobalStyle.mainContainer}>
-                <Text style={[GlobalStyle.titleText, styles.title]}>My contacts</Text>
+                <View style={GlobalStyle.navigationHeaderSection}>
+                    <Text style={GlobalStyle.navigationHeaderTitle}>My Contacts</Text>
+                </View>
                 <View style={styles.listWrapper}>
                     <FlatList 
                         data={this.state.contacts}

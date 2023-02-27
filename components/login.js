@@ -41,37 +41,41 @@ export default class LogInScreen extends Component {
 
       render() {
         return (
-         <View style={[GlobalStyle.mainContainer, styles.loginFormContainer]}>
-            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
+         <View style={GlobalStyle.mainContainer}>
+            <View style={GlobalStyle.navigationHeaderSection}>
+                    <Text style={GlobalStyle.navigationHeaderTitle}>Login</Text>
+            </View>
+            <View style={styles.loginFormContainer}>
+                <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Email' onChangeText={(email) => this.setState({email})} value={this.state.email} />
 
-            <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
-          
-            <TouchableOpacity style={GlobalStyle.button} onPress={() => this.login()}>
-                        <Text style={GlobalStyle.buttonText}>Login</Text>
-            </TouchableOpacity>
-            <>
-                {
-                this.state.fieldNotFilledErr &&
-                <View style={GlobalStyle.errorBox}>
-                    <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
-                    <Text style={GlobalStyle.errorText}>{this.state.fieldNotFilledErr}</Text>
-                </View>
-                }
-            </>
-            <View style={[GlobalStyle.baseText, styles.redirectToSignUp]}>
-                <Text>Don't have an account?  </Text>
-                <Text onPress={() => this.props.navigation.navigate('Signup')} style={styles.signUpText}>Sign up!!</Text>
-            </View> 
+                <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} placeholder='Password' secureTextEntry={true} onChangeText={(password) => this.setState({password})} value={this.state.password} /> 
+
+                <TouchableOpacity style={GlobalStyle.button} onPress={() => this.login()}>
+                            <Text style={GlobalStyle.buttonText}>Login</Text>
+                </TouchableOpacity>
+                <>
+                    {
+                    this.state.fieldNotFilledErr &&
+                    <View style={GlobalStyle.errorBox}>
+                        <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                        <Text style={GlobalStyle.errorText}>{this.state.fieldNotFilledErr}</Text>
+                    </View>
+                    }
+                </>
+                <View style={[GlobalStyle.baseText, styles.redirectToSignUp]}>
+                    <Text>Don't have an account?  </Text>
+                    <Text onPress={() => this.props.navigation.navigate('Signup')} style={styles.signUpText}>Sign up!!</Text>
+                </View>           
+            </View>          
         </View>    
-      
-        );
-        
+        ); 
       }
     }    
     const styles = StyleSheet.create({
       loginFormContainer: {
         justifyContent: 'center',
-        alignItems: 'center'     
+        alignItems: 'center',
+        flex: 15    
       },
       redirectToSignUp: {
         marginTop: 30,

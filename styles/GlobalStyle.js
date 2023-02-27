@@ -21,7 +21,8 @@ export default StyleSheet.create({
 
  titleText: {
    fontSize: 24,
-   fontWeight: 'bold'
+   fontWeight: 'bold',
+   color: '#fff'
  },
 
  button: {
@@ -58,9 +59,23 @@ export default StyleSheet.create({
     width: '74%',
     padding: 10
   },
-
   errorIcon: {
     marginRight: 15,
     alignSelf: 'center'
+  },
+  navigationHeaderTitle:{
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 24,
+    textAlign: 'center'
+  },
+  navigationHeaderSection: {
+    backgroundColor: '#25D366',
+    justifyContent: 'center',
+    textAlign: 'center',
+    flex: 1,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   }
 });

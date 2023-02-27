@@ -20,11 +20,13 @@ export default class Home extends Component{
                 }}
             >
                 <Tab.Screen name="Conversations" component={ConversationScreen} options={{
+                    headerShown: false,
                     tabBarIcon: ({color}) => (
                         <Icon name="chat" color={color} size={26}/>
                     )
                 }}/>
                 <Tab.Screen name="Contacts" component={DisplayContacts} options={{
+                    headerShown: false,
                     tabBarIcon: ({color}) => (
                         <Icon name="contacts" color={color} size={26} />
                     )

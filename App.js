@@ -16,8 +16,8 @@ class App extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={LogInScreen} />
-          <Stack.Screen name="Signup" component={SignUpScreen} />
+          <Stack.Screen name="Login" component={LogInScreen} options={{ headerShown: false}}/>
+          <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerShown: false}} />
           <Stack.Screen name="Home" component={Home} options={{ headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>

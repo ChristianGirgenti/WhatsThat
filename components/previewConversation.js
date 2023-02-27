@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, Image, TouchableOpacity, View} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-import { useNavigation } from '@react-navigation/native';
 export default class PreviewConversation extends Component {
 
     constructor(props){
