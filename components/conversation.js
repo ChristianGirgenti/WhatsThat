@@ -40,9 +40,11 @@ export default class Conversation extends Component{
     }
 
     render(){
+        const {name} = this.props.route.params;
+
         return(
             <View style={GlobalStyle.mainContainer}>
-                <NavigationHeaderWithIcon navigation={this.props.navigation} title="Ronan" />
+                <NavigationHeaderWithIcon navigation={this.props.navigation} title={name} />
 
                 <View style={styles.listWrapper}>
                     <FlatList 
