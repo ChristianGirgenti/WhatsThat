@@ -76,17 +76,18 @@ export default class SignUpScreen extends Component {
         })
         .then((response) => {
           if (response.status == 201) {
-            //TRY TO APPLU TOAST.
-            return this.props.navigation.navigate('Login')
+            this.setState({submitted: false})
+            return this.props.navigation.navigate("Login")
           }
-          else if (response.status == 400) 
-            throw "Some of the data inserted are not correct. Please check the data again";
+          else if (response.status === 400) 
+            throw "Email already exists";
           else 
             throw "Something went wrong while creating the account. Please try again";
             
         })
         .catch((error) => {
           this.setState({genericErr: error})
+          this.setState({submitted: false})
         })
       }
     
@@ -103,7 +104,7 @@ export default class SignUpScreen extends Component {
                 {
                   this.state.emailErr && this.state.submitted &&
                     <View style={GlobalStyle.errorBox}>
-                      <Icon name="times" size={20} color="red" style={GlobalStyle.errorIcon} />
+                      <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
                       <Text style={GlobalStyle.errorText}>{this.state.emailErr}</Text>
                     </View>
                 }
@@ -114,7 +115,7 @@ export default class SignUpScreen extends Component {
                 {
                   this.state.passwordErr && this.state.submitted &&
                   <View style={GlobalStyle.errorBox}>
-                    <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                    <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
                     <Text style={GlobalStyle.errorText}>{this.state.passwordErr}</Text>
                   </View>
                 }
@@ -126,7 +127,7 @@ export default class SignUpScreen extends Component {
                 {
                   this.state.genericErr &&
                   <View style={GlobalStyle.errorBox}>
-                    <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
+                    <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
                     <Text style={GlobalStyle.errorText}>{this.state.genericErr}</Text>
                   </View>
                 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Contact from './contact';
 import NavigationHeader from './screenForNavigation/navigationHeader';

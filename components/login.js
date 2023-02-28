@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NavigationHeader from './screenForNavigation/navigationHeader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default class LogInScreen extends Component {
@@ -13,21 +14,20 @@ export default class LogInScreen extends Component {
         this.state = {
           email : "",
           password : "",
-          fieldNotFilledErr : "",
-          wrongCredentialErr : "",
+          error : "",
           submitted : false
         }
 
       }
     
       clearErrorMessages() {
-        this.setState({fieldNotFilledErr: ""})
+        this.setState({error: ""})
       }
     
       validateFields() {
         if (!(this.state.email && this.state.password))
         {
-          this.setState({fieldNotFilledErr: "All fields must be filled"})
+          this.setState({error: "All fields must be filled"})
           return false;
         }
         return true;
@@ -37,7 +37,36 @@ export default class LogInScreen extends Component {
         this.clearErrorMessages()
         this.setState({submitted : true})
         if (!this.validateFields()) return
-        return this.props.navigation.navigate('Home')
+        let to_send = {
+          email: this.state.email,
+          password: this.state.password
+        };
+        return fetch("http://localhost:3333/api/1.0.0/login",
+        {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(to_send)
+        })
+        .then(response => {
+          if (response.status === 200) return response.json();
+          else if (response.status === 400) throw "Invalid email or password supplied"
+          else throw "Something went wrong while trying to log in"
+        })
+        .then(async rJson => {
+          try {
+            await AsyncStorage.setItem("whatsthat_user_id", rJson.id)
+            await AsyncStorage.setItem("whatsthat_session_token", rJson.token)
+            this.setState({'submitted' : false});
+            this.props.navigation.navigate('Home')
+          }
+          catch {
+            throw "Something went wrong while trying to log in"
+          }
+        })
+        .catch((thisError) => {
+          this.setState({error: thisError})
+          this.setState({submitted: false})
+        })      
       }
 
       render() {
@@ -55,10 +84,10 @@ export default class LogInScreen extends Component {
                 </TouchableOpacity>
                 <>
                     {
-                    this.state.fieldNotFilledErr &&
+                    this.state.error &&
                     <View style={GlobalStyle.errorBox}>
-                        <Icon name="times" size={16} color="red" style={GlobalStyle.errorIcon} />
-                        <Text style={GlobalStyle.errorText}>{this.state.fieldNotFilledErr}</Text>
+                        <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
+                        <Text style={GlobalStyle.errorText}>{this.state.error}</Text>
                     </View>
                     }
                 </>
