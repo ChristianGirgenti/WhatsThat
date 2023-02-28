@@ -20,7 +20,6 @@ export default class Home extends Component{
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn();
         })
-        console.log(this.unsubscribe)
     }
 
     componentWillUnmount() {
@@ -29,7 +28,6 @@ export default class Home extends Component{
 
     checkLoggedIn = async () => {
         const value = await AsyncStorage.getItem('whatsthat_session_token');
-        console.log(value)
         if (value == null) this.props.navigation.navigate('Login');
     }
 

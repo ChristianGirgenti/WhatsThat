@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text} from 'react-native';
+import { View, TouchableOpacity, Text, TextInput, StyleSheet, ActivityIndicator} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import NavigationHeader from './screenForNavigation/navigationHeader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,9 +12,18 @@ export default class MyAccount extends Component{
         super(props);
 
         this.state = {
+            isLoading : true,
+            name : "",
+            lastName : "",
+            email : "",
+            password : "",
             error : "",
             submitted : false
           }
+    }
+
+    componentDidMount(){
+        this.getUserInformation();
     }
 
     async logout(){
@@ -46,11 +55,57 @@ export default class MyAccount extends Component{
         })      
     }
 
+
+    async getUserInformation(){
+        const userId = await AsyncStorage.getItem("whatsthat_user_id")
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userId,
+        {
+            method: 'get',
+            headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
+          })
+        .then(async (response) => {
+            if (response.status === 200) return response.json();
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+          })
+        .then((responseJson) => {
+            console.log(responseJson)
+            this.setState({
+                isLoading: false,
+                name: responseJson.first_name,
+                lastName: responseJson.last_name,
+                email: responseJson.email,
+                submitted: false
+            })
+        })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+    }   
+
     render(){
+        if (this.state.isLoading){
+            return(
+                <View>
+                    <ActivityIndicator />
+                </View>
+            )
+        }
         return(
             <View style={GlobalStyle.mainContainer}>
                 <NavigationHeader title="My Account" />
-                <View style={GlobalStyle.wrapper}>
+                <View style={styles.formContainer}>
+                    
+                    <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.name} /> 
+                    <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.lastName} />
+                    <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.email} />               
+                 
+
                     <TouchableOpacity style={GlobalStyle.button} onPress={() => this.logout()}>
                         <Text style={GlobalStyle.buttonText}>Logout</Text>
                     </TouchableOpacity>
@@ -68,3 +123,11 @@ export default class MyAccount extends Component{
         )
     }
 }
+
+const styles = StyleSheet.create({
+    formContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      flex: 15
+    },
+  });
