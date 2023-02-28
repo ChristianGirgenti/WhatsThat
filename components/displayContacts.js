@@ -40,7 +40,7 @@ export default class DisplayContacts extends Component{
             <View style={GlobalStyle.mainContainer}>
                 <NavigationHeader title="My Contacts" />
 
-                <View style={styles.listWrapper}>
+                <View style={GlobalStyle.wrapper}>
                     <FlatList 
                         data={this.state.contacts}
                         renderItem= {this.renderItem}
@@ -53,9 +53,6 @@ export default class DisplayContacts extends Component{
 }
 
 const styles = StyleSheet.create({
-    listWrapper: {
-        flex: 15,
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',

@@ -46,7 +46,7 @@ export default class Conversation extends Component{
             <View style={GlobalStyle.mainContainer}>
                 <NavigationHeaderWithIcon navigation={this.props.navigation} title={name} />
 
-                <View style={styles.listWrapper}>
+                <View style={GlobalStyle.wrapper}>
                     <FlatList 
                         data={this.state.conversation}
                         renderItem={this.renderItem}
@@ -72,9 +72,6 @@ export default class Conversation extends Component{
 }
 
 const styles = StyleSheet.create({
-    listWrapper: {
-        flex: 15
-    },
     sendMessageContainer: {
         flex:2,
         flexDirection: 'row',

@@ -77,7 +77,7 @@ export default class SignUpScreen extends Component {
         .then((response) => {
           if (response.status == 201) {
             this.setState({submitted: false})
-            return this.props.navigation.navigate("Login")
+            this.props.navigation.navigate("Login")
           }
           else if (response.status === 400) 
             throw "Email already exists";

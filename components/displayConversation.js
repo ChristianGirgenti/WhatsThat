@@ -28,7 +28,7 @@ export default class DisplayConversations extends Component{
         return(
             <View style={GlobalStyle.mainContainer}>
                 <NavigationHeader title="Conversations" />
-                <View style={styles.listWrapper}>
+                <View style={GlobalStyle.wrapper}>
                     <FlatList 
                         data={this.state.conversations}
                         renderItem= {this.renderItem}
@@ -39,9 +39,3 @@ export default class DisplayConversations extends Component{
         )
     }
 }
-
-const styles = StyleSheet.create({
-    listWrapper: {
-        flex: 15
-    }
-})
