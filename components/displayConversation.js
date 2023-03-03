@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Text} from 'react-native';
+import { View, FlatList } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import PreviewConversation from './previewConversation';
 import NavigationHeader from './screenForNavigation/navigationHeader';

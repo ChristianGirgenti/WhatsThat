@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ConversationScreen from './conversationScreen';
 import MyAccount from '../myAccount';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyAccountScreen from './myAccountScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +53,7 @@ export default class Home extends Component{
                     )
                 }} />
 
-                <Tab.Screen name="My Account" component={MyAccount} options={{
+                <Tab.Screen name="My Account" component={MyAccountScreen} options={{
                     tabBarIcon: ({color}) => (
                         <Icon name="account-cog" color={color} size={26} />
                     )

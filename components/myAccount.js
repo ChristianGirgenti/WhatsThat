@@ -16,14 +16,19 @@ export default class MyAccount extends Component{
             name : "",
             lastName : "",
             email : "",
-            password : "",
             error : "",
             submitted : false
           }
     }
 
     componentDidMount(){
-        this.getUserInformation();
+        this.props.navigation.addListener('focus', () => {
+            this.getUserInformation();
+        })
+    }
+
+    edit(){
+        this.props.navigation.navigate('EditAccount')
     }
 
     async logout(){
@@ -74,7 +79,6 @@ export default class MyAccount extends Component{
             else throw "Something went wrong while retrieving your data"
           })
         .then((responseJson) => {
-            console.log(responseJson)
             this.setState({
                 isLoading: false,
                 name: responseJson.first_name,
@@ -105,6 +109,10 @@ export default class MyAccount extends Component{
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.lastName} />
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.email} />               
                  
+
+                    <TouchableOpacity style={GlobalStyle.button} onPress={() => this.edit()}>
+                        <Text style={GlobalStyle.buttonText}>Edit</Text>
+                    </TouchableOpacity>
 
                     <TouchableOpacity style={GlobalStyle.button} onPress={() => this.logout()}>
                         <Text style={GlobalStyle.buttonText}>Logout</Text>
