@@ -79,9 +79,9 @@ export default class EditAccount extends Component{
         this.setState({submitted : true})
         let to_send = {};
         if (this.state.name != this.state.nameStored)
-            to_send = {...to_send, name: this.state.name}
+            to_send = {...to_send, first_name: this.state.name}
         if (this.state.lastName != this.state.lastNameStored)
-            to_send = {...to_send, lastName: this.state.lastName}
+            to_send = {...to_send, last_name: this.state.lastName}
         if (this.state.email != this.state.emailStored)
             to_send = {...to_send, email: this.state.email}
         if (Object.keys(to_send).length === 0) 
@@ -92,8 +92,10 @@ export default class EditAccount extends Component{
         const userId = await AsyncStorage.getItem("whatsthat_user_id")       
         return fetch("http://localhost:3333/api/1.0.0/user/"+userId,
         {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json',
+                      'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")    
+            },
             body: JSON.stringify(to_send)
         })
         .then(async response => {
