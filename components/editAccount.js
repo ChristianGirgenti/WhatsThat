@@ -152,6 +152,11 @@ export default class EditAccount extends Component{
         })      
     }
 
+    async updatePhoto() {
+        console.log("here");
+        this.props.navigation.navigate('Camera')
+
+    }
 
     render(){
         return(
@@ -160,13 +165,16 @@ export default class EditAccount extends Component{
 
                 <View style={styles.formContainer}>
                     
-
                     <>
                         {
                         this.state.photo &&
                         <Image source={{uri: this.state.photo}} style={{width: 100, height: 100}} />
                         }
                     </>
+
+                    <TouchableOpacity style={GlobalStyle.button} onPress={() => this.updatePhoto()}>
+                        <Text style={GlobalStyle.buttonText}>Change Photo</Text>
+                    </TouchableOpacity>
 
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} value={this.state.name} onChangeText={(name) => this.setState({name})}  /> 
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} value={this.state.lastName} onChangeText={(lastName) => this.setState({lastName})}  />
