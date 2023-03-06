@@ -1,11 +1,15 @@
 import { Camera, CameraType} from 'expo-camera';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 export default function MyCamera() {
     const [type, setType] = useState(CameraType.back);
     const [camera, setCamera] = useState(null);
     const [permission, setPermission] = useState(null);
+    const navigation = useNavigation();
+
 
     function toggleCameraType(){
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
@@ -16,6 +20,7 @@ export default function MyCamera() {
         const permission = await Camera.requestCameraPermissionsAsync();
         setPermission(permission.status === 'granted')
     }
+
     useEffect(() => {
         permissionFunction();
     },[])
@@ -25,11 +30,10 @@ export default function MyCamera() {
             const options = {quality: 0.5, base64: true, onPictureSaved: (data) => sendToServer(data)}
             const data = await camera.takePictureAsync(options)
         }
+        navigation.navigate("EditAccount")
     }
 
     async function sendToServer(data){
-        console.log("HERE", data.uri)
-
         let res = await fetch(data.uri);
         let blob = await res.blob()
 
@@ -45,7 +49,6 @@ export default function MyCamera() {
         })
         .then(async (response) => { 
             if (response.status === 200) {
-                console.log("picture added")
                 return response.blob();
             } 
             else if (response.status === 401) {
@@ -69,8 +72,6 @@ export default function MyCamera() {
             <Text>No access to camera</Text>
             )
     }else{
-        console.log(permission);
-
         return (
             <View style={styles.container}>
                 <Camera style={styles.camera} type={type} ref={ref => setCamera(ref)}>

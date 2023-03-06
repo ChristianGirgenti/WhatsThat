@@ -28,18 +28,20 @@ export default class EditAccount extends Component{
         }
     }
 
-
+//WHEN I GO BACK AFTER TAKE A PICTURE, IT STILL SHOWS THE PREVIOUS PICTURE
     componentDidMount(){
-        this.get_profile_image();
-        this.getUserInformation();
-        
+        this.props.navigation.addListener('focus', () => {
+            this.get_profile_image();
+            this.getUserInformation();
+        })   
     }
+
 
     clearErrorMessages() {
         this.setState({error: ""})
       }
 
-      async get_profile_image(){
+    async get_profile_image(){
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
         fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
         {
@@ -60,7 +62,7 @@ export default class EditAccount extends Component{
           })
         .then((resBlob) => {
             let data = URL.createObjectURL(resBlob);
-        
+            console.log(data)
             this.setState({
                 isLoading: false,
                 photo: data
@@ -153,9 +155,7 @@ export default class EditAccount extends Component{
     }
 
     async updatePhoto() {
-        console.log("here");
-        this.props.navigation.navigate('Camera')
-
+        this.props.navigation.navigate('Camera');
     }
 
     render(){
