@@ -1,12 +1,10 @@
-import React, {Component, useState } from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, TextInput} from 'react-native';
+import React, {Component} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity, TextInput, Image} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//FOR MY PURPOSE I AM USING TWO STATES, ONE TO KEEP TRACK OF THE CHANGES IN THE TEXT BOX AND ONE TO 
-//KEEP TRACK OF WHAT IS STORED IN THE DB. IS THERE A BETTER WAY OF DOING IT ?
 
 
 //SAVE CHANGES MIGHT WORK BUT POSSIBLY PATCH IS NOT CONFIGURED
@@ -25,12 +23,14 @@ export default class EditAccount extends Component{
             submitted : false,
             nameStored: "",
             lastNameStored: "",
-            emailStored: ""
+            emailStored: "",
+            photo: null
         }
     }
 
 
     componentDidMount(){
+        this.get_profile_image();
         this.getUserInformation();
         
     }
@@ -38,6 +38,39 @@ export default class EditAccount extends Component{
     clearErrorMessages() {
         this.setState({error: ""})
       }
+
+      async get_profile_image(){
+        const userId = await AsyncStorage.getItem("whatsthat_user_id")
+        fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
+        {
+            method: "GET",
+            headers: {
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")}   
+        })
+        .then(async (response) => {
+            
+            if (response.status === 200) return response.blob();
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+          })
+        .then((resBlob) => {
+            let data = URL.createObjectURL(resBlob);
+        
+            this.setState({
+                isLoading: false,
+                photo: data
+            })
+        })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+
+    }
 
     async getUserInformation(){
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
@@ -127,6 +160,14 @@ export default class EditAccount extends Component{
 
                 <View style={styles.formContainer}>
                     
+
+                    <>
+                        {
+                        this.state.photo &&
+                        <Image source={{uri: this.state.photo}} style={{width: 100, height: 100}} />
+                        }
+                    </>
+
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} value={this.state.name} onChangeText={(name) => this.setState({name})}  /> 
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} value={this.state.lastName} onChangeText={(lastName) => this.setState({lastName})}  />
                     <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} value={this.state.email} onChangeText={(email) => this.setState({email})}   />               

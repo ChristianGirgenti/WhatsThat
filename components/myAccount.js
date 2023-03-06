@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, TextInput, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, ActivityIndicator, Image} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import NavigationHeader from './screenForNavigation/navigationHeader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,12 +17,14 @@ export default class MyAccount extends Component{
             lastName : "",
             email : "",
             error : "",
-            submitted : false
+            submitted : false,
+            photo: null
           }
     }
 
     componentDidMount(){
         this.props.navigation.addListener('focus', () => {
+            this.get_profile_image();
             this.getUserInformation();
         })
     }
@@ -60,6 +62,38 @@ export default class MyAccount extends Component{
         })      
     }
 
+    async get_profile_image(){
+        const userId = await AsyncStorage.getItem("whatsthat_user_id")
+        fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
+        {
+            method: "GET",
+            headers: {
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")}   
+        })
+        .then(async (response) => {
+            
+            if (response.status === 200) return response.blob();
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+          })
+        .then((resBlob) => {
+            let data = URL.createObjectURL(resBlob);
+        
+            this.setState({
+                isLoading: false,
+                photo: data
+            })
+        })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+
+    }
 
     async getUserInformation(){
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
@@ -104,10 +138,17 @@ export default class MyAccount extends Component{
             <View style={GlobalStyle.mainContainer}>
                 <NavigationHeader title="My Account" />
                 <View style={styles.formContainer}>
-                    
-                    <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.name} /> 
-                    <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.lastName} />
-                    <TextInput style={[GlobalStyle.baseText, GlobalStyle.textInputBox]} editable={false} value={this.state.email} />               
+
+                    <>
+                        {
+                        this.state.photo &&
+                        <Image source={{uri: this.state.photo}} style={styles.imageDimensione} />
+                        }
+                    </>
+                
+                    <Text style={[GlobalStyle.baseText, styles.paddingBottom, styles.paddingTop]}>{this.state.name}</Text>
+                    <Text style={[GlobalStyle.baseText, styles.paddingBottom]}>{this.state.lastName}</Text>
+                    <Text style={[GlobalStyle.baseText, styles.paddingBottom]}>{this.state.email}</Text>               
                  
 
                     <TouchableOpacity style={GlobalStyle.button} onPress={() => this.edit()}>
@@ -138,4 +179,14 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       flex: 15
     },
+    imageDimensione:{
+        width:100,
+        height: 100
+    },
+    paddingBottom: {
+        paddingBottom: 20
+    },
+    paddingTop: {
+        paddingTop:20
+    }
   });
