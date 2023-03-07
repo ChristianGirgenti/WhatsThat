@@ -80,7 +80,7 @@ export default class EditAccount extends Component{
         {
             method: 'get',
             headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
-          })
+        })
         .then(async (response) => {
             if (response.status === 200) return response.json();
             else if (response.status === 401) {

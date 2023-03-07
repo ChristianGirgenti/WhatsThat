@@ -20,7 +20,6 @@ export default class DisplayConversations extends Component{
     }
 
     renderItem = ({item}) => {
-        console.log(item)
         return <PreviewConversation name={item.name} lastName={item.lastName} conversation={item.conversation} navigation={this.props.navigation}/>
     }
 

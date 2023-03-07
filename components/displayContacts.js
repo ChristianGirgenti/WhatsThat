@@ -51,15 +51,3 @@ export default class DisplayContacts extends Component{
         )
     }
 }
-
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        flex: 1,
-        padding: 5,
-        marginTop: 20,
-        marginBottom: 10,
-        textAlign: 'center'
-    },
-})

@@ -18,7 +18,7 @@ export default class Contact extends Component {
         return (
             <TouchableOpacity  onPress={() => this.openContact()}>
                 <View style={styles.contactContainer}>
-                    <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/6522/6522516.png'}} style={styles.contactProfileImage} />
+                    <Image source={this.props.imageSource} style={styles.contactProfileImage} />
                     <Text style={[GlobalStyle.baseText, styles.contactText]}>{this.props.name} {this.props.lastName}</Text>
                 </View>
             </TouchableOpacity>      
@@ -32,11 +32,9 @@ export default class Contact extends Component {
             flex: 1,
             flexDirection: 'row',
             backgroundColor: 'white',
-            borderRadius: 4,
             justifyContent: 'flex-start',
             alignItems: 'center',
-            marginHorizontal: 20,
-            marginBottom: 10
+            borderBottomWidth: 1
         },
         contactProfileImage: {
             alignSelf: 'flex-start',

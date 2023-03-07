@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import DisplayContacts from '../displayContacts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ConversationScreen from './conversationScreen';
-import MyAccount from '../myAccount';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyAccountScreen from './myAccountScreen';
+import SearchUsers from '../searchUsers';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,9 +47,17 @@ export default class Home extends Component{
                         <Icon name="chat" color={color} size={26}/>
                     )
                 }}/>
+                
                 <Tab.Screen name="Contacts" component={DisplayContacts} options={{
                     tabBarIcon: ({color}) => (
                         <Icon name="contacts" color={color} size={26} />
+                    )
+                }} />
+
+
+                <Tab.Screen name="Search" component={SearchUsers} options={{
+                    tabBarIcon: ({color}) => (
+                        <Icon name="magnify" color={color} size={26} />
                     )
                 }} />
 
