@@ -34,7 +34,6 @@ export default class Contact extends Component {
             backgroundColor: 'white',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            borderBottomWidth: 1
         },
         contactProfileImage: {
             alignSelf: 'flex-start',

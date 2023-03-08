@@ -23,6 +23,7 @@ export default class LogInScreen extends Component {
     componentDidMount(){
         this.props.navigation.addListener('focus', () => {
           this.clearFields();
+          this.clearErrorMessages();
         })
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
           this.checkLoggedIn();

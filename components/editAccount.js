@@ -5,10 +5,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
-//SAVE CHANGES MIGHT WORK BUT POSSIBLY PATCH IS NOT CONFIGURED
-
 export default class EditAccount extends Component{
 
     constructor(props){
