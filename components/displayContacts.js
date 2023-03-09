@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Contact from './contact';
 import NavigationHeader from './screenForNavigation/navigationHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 
 export default class DisplayContacts extends Component{
@@ -30,7 +32,6 @@ export default class DisplayContacts extends Component{
             headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
         })
         .then(async (response) => {
-            console.log(response)
             if (response.status === 200)
             {
                 const responseJson = await response.json();
@@ -82,10 +83,42 @@ export default class DisplayContacts extends Component{
 
     };
 
+    async removeContact(userIdToRemove){
+        fetch("http://localhost:3333/api/1.0.0/user/"+userIdToRemove+"/contact", 
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")
+            },   
+        })
+        .then(async (response) => { 
+            if (response.status === 200) {
+                this.getContacts()
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else if (response.status === 404) throw "User not found!"
+            else if (response.status === 400) throw "You can't remove yourself as a contact"
+            else throw "Something went wrong while retrieving your data"
+          })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+    };
+
+
 
     renderItem = ({item}) => {
         return <View  style={styles.contactViewContainer} >
-                <Contact imageSource={item.photo} name={item.first_name} lastName={item.last_name}/>
+                <Contact imageSource={item.photo} name={item.first_name} lastName={item.last_name} style={styles.contact}/>
+                <TouchableOpacity style={[GlobalStyle.button, styles.removeButton]} onPress={() => this.removeContact(item.user_id)}>
+                            <Text style={GlobalStyle.buttonText}>Remove</Text>
+                </TouchableOpacity>
                </View>
     }
 
@@ -116,7 +149,18 @@ export default class DisplayContacts extends Component{
 }
 
 const styles = StyleSheet.create({
-    contactViewContainer: {
-        borderBottomWidth: 'thin'
+    removeButton: {
+        width: '30%',
+        marginTop: 0
     },
+    contactViewContainer: {
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderBottomWidth: 'thin',
+        justifyContent: 'space-between'
+    },
+    contact: {
+        width: '70%',
+        borderBottomWidth: 0
+    }
   });
