@@ -30,11 +30,17 @@ export default class SearchUsers extends Component {
         {
             return <View style={styles.contactViewContainer}>
                     <Contact name={item.given_name} lastName={item.family_name} imageSource={item.photo} style={styles.contact}/>
-                    <TouchableOpacity style={[GlobalStyle.button, styles.addButton]} onPress={() => this.addContact(item.user_id)}>
-                            <Text style={GlobalStyle.buttonText}>Add Contact</Text>
-                    </TouchableOpacity>
-                   </View>
-                
+                    
+                    <View style={styles.groupButton}>
+                        <TouchableOpacity style={styles.addButton} onPress={() => this.addContact(item.user_id)}>
+                            <Icon name="account-plus" color={'green'} size={40} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.send()}>
+                            <Icon name="account-cancel-outline" color={'red'} size={40} />
+                        </TouchableOpacity>                    
+                    </View>
+                  
+                   </View>                
         }
     }
 
@@ -170,6 +176,9 @@ export default class SearchUsers extends Component {
                         keyExtractor={(item,index) => index.toString()}
                     />
                     </View>
+                    <TouchableOpacity style={[GlobalStyle.button, styles.goToBlockedListButton]} onPress={() => this.props.navigation.navigate("BlockedUsers")}>
+                            <Text style={GlobalStyle.buttonText}>Blocked Users</Text>
+                    </TouchableOpacity>
 
                 </View>
 
@@ -195,8 +204,7 @@ export default class SearchUsers extends Component {
             paddingTop: 20
         },
         addButton: {
-            width: '30%',
-            marginTop: 0
+            marginRight: 10
         },
         contactViewContainer: {
             flexDirection: 'row',
@@ -207,6 +215,14 @@ export default class SearchUsers extends Component {
         contact: {
             width: '70%',
             borderBottomWidth: 0
+        },
+        goToBlockedListButton: {
+            width: '100%',
+        },
+        groupButton: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight: 10
         }
 
     });

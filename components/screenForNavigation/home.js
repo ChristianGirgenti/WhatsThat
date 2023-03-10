@@ -6,6 +6,7 @@ import ConversationScreen from './conversationScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyAccountScreen from './myAccountScreen';
 import SearchUsers from '../searchUsers';
+import UsersScreen from './usersScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -55,7 +56,7 @@ export default class Home extends Component{
                 }} />
 
 
-                <Tab.Screen name="Search" component={SearchUsers} options={{
+                <Tab.Screen name="Search" component={UsersScreen} options={{
                     tabBarIcon: ({color}) => (
                         <Icon name="magnify" color={color} size={26} />
                     )

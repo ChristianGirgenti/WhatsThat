@@ -116,8 +116,8 @@ export default class DisplayContacts extends Component{
     renderItem = ({item}) => {
         return <View  style={styles.contactViewContainer} >
                 <Contact imageSource={item.photo} name={item.first_name} lastName={item.last_name} style={styles.contact}/>
-                <TouchableOpacity style={[GlobalStyle.button, styles.removeButton]} onPress={() => this.removeContact(item.user_id)}>
-                            <Text style={GlobalStyle.buttonText}>Remove</Text>
+                <TouchableOpacity style={styles.removeContactButton} onPress={() => this.removeContact(item.user_id)}>
+                            <Icon name="account-remove" color={'red'} size={40} />
                 </TouchableOpacity>
                </View>
     }
@@ -149,10 +149,6 @@ export default class DisplayContacts extends Component{
 }
 
 const styles = StyleSheet.create({
-    removeButton: {
-        width: '30%',
-        marginTop: 0
-    },
     contactViewContainer: {
         flexDirection: 'row',
         backgroundColor: 'white',
@@ -162,5 +158,9 @@ const styles = StyleSheet.create({
     contact: {
         width: '70%',
         borderBottomWidth: 0
+    },
+    removeContactButton: {
+        marginRight:10,
+        alignSelf: 'center'
     }
   });
