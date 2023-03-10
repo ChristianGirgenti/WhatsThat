@@ -35,7 +35,7 @@ export default class SearchUsers extends Component {
                         <TouchableOpacity style={styles.addButton} onPress={() => this.addContact(item.user_id)}>
                             <Icon name="account-plus" color={'green'} size={40} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.send()}>
+                        <TouchableOpacity onPress={() => this.blockContact(item.user_id)}>
                             <Icon name="account-cancel-outline" color={'red'} size={40} />
                         </TouchableOpacity>                    
                     </View>
@@ -44,8 +44,13 @@ export default class SearchUsers extends Component {
         }
     }
 
+    clearErrorMessages() {
+        this.setState({error: ""})
+    }
+
     async getContactPhoto(userId)
     {
+        this.clearErrorMessages()
         return fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
         {
             method: "GET",
@@ -75,6 +80,7 @@ export default class SearchUsers extends Component {
 
     async handleSearchTermChange(searchTerm) 
     {   
+        this.clearErrorMessages()
         this.state.currentUserId =  await AsyncStorage.getItem("whatsthat_user_id");
         if (searchTerm === "") {
             this.setState({searchTerm: ""})
@@ -118,7 +124,7 @@ export default class SearchUsers extends Component {
     };
 
     async addContact(userIdToAdd){
-        console.log(userIdToAdd)
+        this.clearErrorMessages()
         fetch("http://localhost:3333/api/1.0.0/user/"+userIdToAdd+"/contact", 
         {
             method: "POST",
@@ -139,6 +145,36 @@ export default class SearchUsers extends Component {
             }
             else if (response.status === 404) throw "User not found!"
             else if (response.status === 400) throw "You can't add yourself as a contact"
+            else throw "Something went wrong while retrieving your data"
+          })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+    };
+
+    async blockContact(userIdToBlock){
+        this.clearErrorMessages()
+        console.log(userIdToBlock)
+        fetch("http://localhost:3333/api/1.0.0/user/"+userIdToBlock+"/block", 
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")
+            },   
+        })
+        .then(async (response) => { 
+            if (response.status === 200) {
+                this.props.navigation.navigate("BlockedUsers")
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else if (response.status === 404) throw "User not found!"
+            else if (response.status === 400) throw "You can't block yourself"
             else throw "Something went wrong while retrieving your data"
           })
         .catch((thisError) => {

@@ -25,7 +25,12 @@ export default class DisplayContacts extends Component{
         })   
     }
 
+    clearErrorMessages() {
+        this.setState({error: ""})
+    }
+
     async getContacts() {
+        this.clearErrorMessages()
         return fetch("http://localhost:3333/api/1.0.0/contacts",
         {
             method: 'GET',
@@ -56,6 +61,8 @@ export default class DisplayContacts extends Component{
 
     async getContactPhoto(userId)
     {
+        this.clearErrorMessages()
+
         return fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
         {
             method: "GET",
@@ -84,7 +91,9 @@ export default class DisplayContacts extends Component{
     };
 
     async removeContact(userIdToRemove){
-        fetch("http://localhost:3333/api/1.0.0/user/"+userIdToRemove+"/contact", 
+        this.clearErrorMessages()
+
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userIdToRemove+"/contact", 
         {
             method: "DELETE",
             headers: {

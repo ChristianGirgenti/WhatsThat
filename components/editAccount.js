@@ -27,6 +27,7 @@ export default class EditAccount extends Component{
 //WHEN I GO BACK AFTER TAKE A PICTURE, IT STILL SHOWS THE PREVIOUS PICTURE
     componentDidMount(){
         this.props.navigation.addListener('focus', () => {
+            this.clearErrorMessages()
             this.get_profile_image();
             this.getUserInformation();
         })   
@@ -38,8 +39,9 @@ export default class EditAccount extends Component{
       }
 
     async get_profile_image(){
+        this.clearErrorMessages()
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
-        fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
         {
             method: "GET",
             headers: {
@@ -71,6 +73,7 @@ export default class EditAccount extends Component{
     }
 
     async getUserInformation(){
+        this.clearErrorMessages()
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
         return fetch("http://localhost:3333/api/1.0.0/user/"+userId,
         {
@@ -151,6 +154,7 @@ export default class EditAccount extends Component{
     }
 
     async updatePhoto() {
+        this.clearErrorMessages()
         this.props.navigation.navigate('Camera');
     }
 

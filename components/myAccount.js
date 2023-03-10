@@ -29,11 +29,17 @@ export default class MyAccount extends Component{
         })
     }
 
+    clearErrorMessages() {
+        this.setState({error: ""})
+    }
+
     edit(){
+        this.clearErrorMessages()
         this.props.navigation.navigate('EditAccount')
     }
 
     async logout(){
+        this.clearErrorMessages()
         this.setState({submitted: true})
         return fetch("http://localhost:3333/api/1.0.0/logout",
         {
@@ -63,8 +69,10 @@ export default class MyAccount extends Component{
     }
 
     async get_profile_image(){
+        this.clearErrorMessages()
+
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
-        fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
         {
             method: "GET",
             headers: {
@@ -96,6 +104,8 @@ export default class MyAccount extends Component{
     }
 
     async getUserInformation(){
+        this.clearErrorMessages()
+
         const userId = await AsyncStorage.getItem("whatsthat_user_id")
         return fetch("http://localhost:3333/api/1.0.0/user/"+userId,
         {

@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 
 export default class BlockedUsers extends Component {
-
+//I CAN ONLY BLOCK USERS IN MY CONTACT LIST BUT SHOULDNT I BE ABLE TO BLOCK USERS IN THE USER LISTS INSTEAD AS WE CAN JUST REMOVE SOMEONE FROM THE CONTACT LIST? 
     constructor(props){
         super(props);
 
