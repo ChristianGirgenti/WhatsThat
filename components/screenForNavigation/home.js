@@ -1,12 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { Component } from 'react';
-import DisplayContacts from '../displayContacts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ConversationScreen from './conversationScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyAccountScreen from './myAccountScreen';
 import SearchUsers from '../searchUsers';
-import UsersScreen from './usersScreen';
+import ContactsScreen from './contactScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,14 +48,14 @@ export default class Home extends Component{
                     )
                 }}/>
                 
-                <Tab.Screen name="Contacts" component={DisplayContacts} options={{
+                <Tab.Screen name="Contacts" component={ContactsScreen} options={{
                     tabBarIcon: ({color}) => (
                         <Icon name="contacts" color={color} size={26} />
                     )
                 }} />
 
 
-                <Tab.Screen name="Search" component={UsersScreen} options={{
+                <Tab.Screen name="Search" component={SearchUsers} options={{
                     tabBarIcon: ({color}) => (
                         <Icon name="magnify" color={color} size={26} />
                     )

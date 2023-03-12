@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, TouchableOpacity, View, TextInput, FlatList} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-import NavigationHeader from './screenForNavigation/navigationHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Contact from './contact';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 
 export default class BlockedUsers extends Component {
-//I CAN ONLY BLOCK USERS IN MY CONTACT LIST BUT SHOULDNT I BE ABLE TO BLOCK USERS IN THE USER LISTS INSTEAD AS WE CAN JUST REMOVE SOMEONE FROM THE CONTACT LIST? 
     constructor(props){
         super(props);
 
@@ -19,20 +17,119 @@ export default class BlockedUsers extends Component {
 
       }
 
-    // renderItem = ({item}) => {
-    //     if (item.user_id != this.state.currentUserId)
-    //     {
-    //         return <View style={styles.contactViewContainer}>
-    //                 <Contact name={item.given_name} lastName={item.family_name} imageSource={item.photo} style={styles.contact}/>
-    //                 <TouchableOpacity style={[GlobalStyle.button, styles.addButton]} onPress={() => this.addContact(item.user_id)}>
-    //                         <Text style={GlobalStyle.buttonText}>Add Contact</Text>
-    //                 </TouchableOpacity>
-    //                </View>
-                
-    //     }
-    // }
 
-  
+    componentDidMount() {
+        this.props.navigation.addListener('focus', () => {
+            this.getBlockedContacts();
+        })  
+    }
+
+    clearErrorMessages() {
+        this.setState({error: ""})
+    }
+
+    async getContactPhoto(userId)
+    {
+        this.clearErrorMessages()
+
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userId+"/photo", 
+        {
+            method: "GET",
+            headers: {
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")}   
+        })
+        .then(async (response) => {
+            
+            if (response.status === 200) return response.blob();
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+          })
+        .then((resBlob) => {
+            let data = URL.createObjectURL(resBlob);
+            return data;
+        })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+
+    };
+
+    async getBlockedContacts() {
+        this.clearErrorMessages()
+        return fetch("http://localhost:3333/api/1.0.0/blocked",
+        {
+            method: 'GET',
+            headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
+        })
+        .then(async (response) => {
+            if (response.status === 200)
+            {
+                const responseJson = await response.json();
+                const updatedResponseJson = await Promise.all(responseJson.map(async (item) => {
+                    const photo = await this.getContactPhoto(item.user_id);
+                    return {...item, photo}
+                }));
+                this.setState({blockedUsers: updatedResponseJson})
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+            })
+        .catch((thisError) => {
+            this.setState({error: thisError.toString()})
+        })
+    }  
+
+
+    async unblockContact(userIdToUnblock){
+        this.clearErrorMessages()
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userIdToUnblock+"/block", 
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")
+            },   
+        })
+        .then(async (response) => { 
+            if (response.status === 200) {
+                this.props.navigation.navigate('DisplayContacts')
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else if (response.status === 404) throw "User not found!"
+            else if (response.status === 400) throw "You can't block yourself"
+            else throw "Something went wrong while retrieving your data"
+          })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+    };
+
+    renderItem = ({item}) => {
+        console.log(item)
+        return  <View style={styles.contactViewContainer}>
+                    <Contact name={item.first_name} lastName={item.last_name} imageSource={item.photo} style={styles.contact}/>
+                    <TouchableOpacity style={styles.unblockButton} onPress={() => this.unblockContact(item.user_id)}>
+                                <Icon name="account-lock-open-outline" color={'green'} size={40} />
+                    </TouchableOpacity>
+                </View>
+                
+        
+    }
  
     render() {
         return (
@@ -49,7 +146,7 @@ export default class BlockedUsers extends Component {
                         }
                     </>                    
                     <FlatList 
-                        data={this.state.searchResults}
+                        data={this.state.blockedUsers}
                         renderItem= {this.renderItem}
                         keyExtractor={(item,index) => index.toString()}
                     />
@@ -61,3 +158,21 @@ export default class BlockedUsers extends Component {
         
       }
     }
+
+    const styles = StyleSheet.create({
+        contactViewContainer: {
+            flexDirection: 'row',
+            backgroundColor: 'white',
+            borderBottomWidth: 'thin',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+        },
+        contact: {
+            width: '70%',
+            borderBottomWidth: 0
+        },
+        unblockButton: {
+            marginRight: 10,
+            alignSelf: 'center'
+        }
+      });

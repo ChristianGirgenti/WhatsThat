@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MyAccount from '../myAccount';
-import EditAccount from '../editAccount';
-import MyCamera from '../myCamera';
-import SearchUsers from '../searchUsers';
 import BlockedUsers from '../blockedUsers';
+import DisplayContacts from '../displayContacts';
 
-export default class UsersScreen extends Component {
+export default class ContactsScreen extends Component {
   constructor(props){
     super(props); 
   }
@@ -16,7 +13,7 @@ export default class UsersScreen extends Component {
 
     return (
         <Stack.Navigator>
-          <Stack.Screen name="SearchUsers" component={SearchUsers} options={{headerShown: false}}/>
+          <Stack.Screen name="DisplayContacts" component={DisplayContacts} options={{headerShown: false}}/>
           <Stack.Screen name="BlockedUsers" component={BlockedUsers} options={{headerShown: false}}/>
         </Stack.Navigator>    
     );  
