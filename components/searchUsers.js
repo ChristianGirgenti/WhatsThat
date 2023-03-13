@@ -21,8 +21,6 @@ export default class SearchUsers extends Component {
             error: "",
             currentUserId: 0
           }
-
-          this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
       }
 
     renderItem = ({item}) => {
@@ -72,7 +70,7 @@ export default class SearchUsers extends Component {
 
     };
 
-    async handleSearchTermChange(searchTerm) 
+    async search(searchTerm, location) 
     {   
         this.clearErrorMessages()
         this.state.currentUserId =  await AsyncStorage.getItem("whatsthat_user_id");
@@ -82,7 +80,7 @@ export default class SearchUsers extends Component {
             return
         }
         this.setState({searchTerm: searchTerm});
-        return fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm,
+        return fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location,
         {
             method: 'GET',
             headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
@@ -91,7 +89,6 @@ export default class SearchUsers extends Component {
             if (response.status === 200)
             {
                 const responseJson = await response.json();
-
                 //RESPONSEJSON HERE WAS ONLY HOLDING INFORMATION ABOUT ID, NAME, LASTNAME, AND EMAIL OF THE CONTACT
                 //I NEEDED TO ADD THE PHOTO IN RESPONSE SOMEHOW
                 //WITH THE CALL BELOW, I AM MAKING MANY ASYNCRONOUS CALL OF GETCONTACT PHOTO USING PROMISE AND THEN MAPPING IT TO ITEM.
@@ -153,10 +150,21 @@ export default class SearchUsers extends Component {
                 <View style={GlobalStyle.wrapper}>
                     <TextInput
                         style={styles.searchBarContainer}
-                        onChangeText={this.handleSearchTermChange}
                         value={this.state.searchTerm}
+                        onChangeText={(searchTerm) => this.setState({searchTerm})}
                         placeholder="Search..."
                     />
+                    <View style={styles.groupSearchButton}>
+                        <TouchableOpacity style={styles.searchButton} onPress={() => this.search(this.state.searchTerm, "all")}>
+                            <Icon name="search-web" color={'green'} size={40} />
+                            <Text>Search All</Text>
+                        </TouchableOpacity> 
+                        <TouchableOpacity style={styles.searchButton} onPress={() => this.search(this.state.searchTerm, "contacts")}>
+                            <Icon name="account-search" color={'green'} size={40} />
+                            <Text>Search Contacts</Text>
+                        </TouchableOpacity> 
+                    </View>
+                    
                     <>
                         {
                         this.state.error &&
@@ -212,5 +220,12 @@ export default class SearchUsers extends Component {
         contact: {
             width: '70%',
             borderBottomWidth: 0
+        },
+        groupSearchButton: {
+            flexDirection: 'row',
+            justifyContent: 'space-around'
+        },
+        searchButton:{
+            alignItems: 'center'
         }
     });
