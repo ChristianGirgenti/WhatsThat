@@ -31,12 +31,9 @@ export default class SearchUsers extends Component {
             return <View style={styles.contactViewContainer}>
                     <Contact name={item.given_name} lastName={item.family_name} imageSource={item.photo} style={styles.contact}/>
                     
-                    <View style={styles.groupButton}>
-                        <TouchableOpacity style={styles.addButton} onPress={() => this.addContact(item.user_id)}>
-                            <Icon name="account-plus" color={'green'} size={40} />
-                        </TouchableOpacity>                 
-                    </View>
-                  
+                    <TouchableOpacity style={styles.addButton} onPress={() => this.addContact(item.user_id)}>
+                        <Icon name="account-plus" color={'green'} size={40} />
+                    </TouchableOpacity>                 
                    </View>                
         }
     }
@@ -203,7 +200,8 @@ export default class SearchUsers extends Component {
             paddingTop: 20
         },
         addButton: {
-            marginRight: 10
+            marginRight: 10,
+            alignSelf: 'center'
         },
         contactViewContainer: {
             flexDirection: 'row',
