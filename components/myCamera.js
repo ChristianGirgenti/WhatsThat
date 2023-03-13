@@ -30,7 +30,6 @@ export default function MyCamera() {
             const options = {quality: 0.5, base64: true, onPictureSaved: (data) => sendToServer(data)}
             const data = await camera.takePictureAsync(options)
         }
-        navigation.navigate("EditAccount")
     }
 
     async function sendToServer(data){
@@ -49,7 +48,7 @@ export default function MyCamera() {
         })
         .then(async (response) => { 
             if (response.status === 200) {
-                return response.blob();
+                navigation.navigate("EditAccount")
             } 
             else if (response.status === 401) {
                 console.log("Unauthorised")
