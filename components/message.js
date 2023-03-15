@@ -11,7 +11,7 @@ export default class Message extends Component {
       render() {
         return (
             <View style={[styles.message, this.props.user_id === 1 ? styles.from_me : styles.other]}>
-                    <Text style={styles.author}>{this.props.name}</Text>
+                    <Text style={styles.author}>{this.props.userName}</Text>
                     <Text style={styles.content}>{this.props.message}</Text>
             </View> 
         );
