@@ -24,6 +24,7 @@ export default class DisplayConversations extends Component{
 
     componentDidMount() {
         this.props.navigation.addListener('focus', () => {
+            this.setState({conversationTitle: ""})
             this.getUserInformation();
             this.viewAllChats();
         })   
@@ -135,7 +136,7 @@ export default class DisplayConversations extends Component{
     }
 
     renderItem = ({item}) => {
-        return <PreviewConversation chatId={item.chat_id} name={item.name} lastMessage={item.lastMessage} navigation={this.props.navigation} userName={this.state.fullName}/>
+        return <PreviewConversation chatId={item.chat_id} name={item.name} lastMessage={item.last_message.message} navigation={this.props.navigation} userName={this.state.fullName}/>
     }
 
     render(){
@@ -178,17 +179,18 @@ const styles = StyleSheet.create({
     newConversationContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        alignItems:'flex-end'
+        alignItems:'flex-end',
+        borderBottomWidth: 1,
+        backgroundColor: '#90EE90',
+
     },
     conversationTitleContainer: {
         paddingLeft:10,
         paddingTop:5,
         paddingBottom:5,
         flexDirection: 'row',
-        backgroundColor: 'white',
-        borderBottomWidth: 1,
         height: 40,
-        width: '100%'
+        width: '100%',
     },
     error: {
         width: '100%',

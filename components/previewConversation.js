@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
+
+
 export default class PreviewConversation extends Component {
 
     constructor(props){
@@ -39,12 +41,13 @@ export default class PreviewConversation extends Component {
             backgroundColor: 'white',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            borderBottomWidth: 1
+            borderBottomWidth: 1,
         },
         textContainer: {
             flex:1,
             flexDirection: 'column',
-            marginLeft: 10
+            marginLeft: 10,
+            height: 50
         },
         contactNameText:{
             fontWeight: 'bold'

@@ -1,19 +1,33 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, View} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default class Message extends Component {
 
     constructor(props){
         super(props);
+        this.state = {
+            myUserId: null,
+            isMyMessage: false
+        }
       }
 
-      render() {
+    async componentDidMount() {
+        const myUserId = await AsyncStorage.getItem("whatsthat_user_id");
+        this.setState({myUserId})
+        this.setState({isMyMessage: this.state.myUserId.toString() === this.props.user_id.toString()})
+    }
+
+    render() {
         return (
-            <View style={[styles.message, this.props.user_id === 1 ? styles.from_me : styles.other]}>
+            <View style={[styles.message, this.state.isMyMessage
+            ? styles.from_me : styles.other]}>
                     <Text style={styles.author}>{this.props.userName}</Text>
                     <Text style={styles.content}>{this.props.message}</Text>
+                    <Text style={styles.time}>{this.props.time}</Text>
             </View> 
+
         );
       }
     }
@@ -34,10 +48,10 @@ export default class Message extends Component {
             color: '#ffffff'
         },
         other: {
-            alignSelf: 'flex-end',
             backgroundColor: 'limegreen', 
         },
         from_me: {
-            backgroundColor: 'skyblue'
+            backgroundColor: 'skyblue',
+            alignSelf: 'flex-end'
         }
     })

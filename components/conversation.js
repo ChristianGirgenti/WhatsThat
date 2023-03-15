@@ -20,23 +20,15 @@ export default class Conversation extends Component{
         }
     }
 
-       // {id: 1, user_id: 1, name: "Ash", message: "Tell me why?"},
-                // {id: 2, user_id: 2, name: "Ronan", message: "Ain't nothing by a heartache"},
-                // {id: 3, user_id: 1, name: "Ash", message: "Tell me why?"},
-                // {id: 4, user_id: 2, name: "Ronan", message: "Ain't nothing by a mistake"},
-                // {id: 5, user_id: 1, name: "Ash", message: "Tell me why?"},
-                // {id: 6, user_id: 2, name: "Ronan", message: "I never want to hear you say"},
-                // {id: 7, user_id: 1, name: "Ash", message: "I want it that way"},
-                // {id: 8, user_id: 2, name: "Ronan", message: "Am I your fire? Your one desire?"},
-                // {id: 9, user_id: 1, name: "Ash", message: "No, don't call here no more creep!"},
-                // {id: 10, user_id: 2, name: "Ronan", message: "I never want to hear you say"},
-                // {id: 11, user_id: 1, name: "Ash", message: "I want it that way"},
-                // {id: 12, user_id: 1, name: "Ash", message: "Am I your fire? Your one desire?"},
-                // {id: 13, user_id: 2, name: "Ronan", message: "No, don't call here no more creep!"},
+    componentDidMount(){
+        this.props.navigation.addListener('focus', () => {
+            this.viewSingleChatDetail(this.props.route.params.chatId);
+        })   
+    }
 
     renderItem = ({item}) => {
         console.log(item)
-        return <Message userName={item.user_name} message={item.message} user_id={item.user_id} />
+        return <Message userName={item.user_name} message={item.message} user_id={item.user_id} time={item.message_time} />
     }
 
     clearErrorMessages() {
@@ -65,21 +57,20 @@ export default class Conversation extends Component{
         .then(async (response) => { 
             if (response.status === 200) {
                 console.log("OK")
+
+                console.log(response.json)
                 const myId = await AsyncStorage.getItem("whatsthat_user_id")
                 const newMessage = {
+                    message: this.state.message,
+
                     user_id : myId,
                     user_name: userName,
-                    message: this.state.message
+                    message_time: new Date(Date.now()).toLocaleString()
+                    
                 }
-                console.log(this.state.conversation)
-                console.log(newMessage)
                
                 const updatedConversation = [...this.state.conversation, newMessage];
-                
-
                 this.setState({conversation: updatedConversation, message: ""});
-                console.log(this.state.conversation)
-
             } 
             else if (response.status === 401) {
                 console.log("Unauthorised")
@@ -95,11 +86,49 @@ export default class Conversation extends Component{
         })
     }
 
+    async viewSingleChatDetail(chatId) {
+        console.log("hi")
+        this.clearErrorMessages()
+        return fetch("http://localhost:3333/api/1.0.0/chat/"+chatId,
+        {
+            method: 'GET',
+            headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
+        })
+        .then(async (response) => {
+            if (response.status === 200)
+            {
+
+                const responseJson = await response.json();
+                const conversationObject = [];
+                responseJson.messages.forEach((msg) => {
+                    const messageObject = {
+                        message: msg.message,
+                        user_id: msg.author.user_id,
+                        user_name: msg.author.first_name + " " + msg.author.last_name,
+                        message_id: msg.message_id,
+                        message_time: new Date(msg.timestamp).toLocaleString()
+                    }
+                    conversationObject.unshift(messageObject);
+                })
+                this.setState({conversation: conversationObject})
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+          })
+        .catch((thisError) => {
+            this.setState({error: thisError.toString()})
+        })
+    }
+
     render(){
         const {conversationTitle} = this.props.route.params;
-        const {chatId} = this.props.route.params;
         const {userName} = this.props.route.params;
-
+        const {chatId} = this.props.route.params;
         return(
             <View style={GlobalStyle.mainContainer}>
                 <NavigationHeaderWithIcon navigation={this.props.navigation} title={conversationTitle} />
@@ -111,6 +140,15 @@ export default class Conversation extends Component{
                         keyExtractor={(item,index) => index.toString()}
                     />
                 </View>
+                <>
+                        {
+                        this.state.error &&
+                        <View style={[GlobalStyle.errorBox, styles.error]}>
+                            <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
+                            <Text style={GlobalStyle.errorText}>{this.state.error}</Text>
+                        </View>
+                        }
+                    </>   
                 <View style={styles.sendMessageContainer}>
                     <TextInput
                         multiline={true} 
