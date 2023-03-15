@@ -61,8 +61,7 @@ export default class DisplayContacts extends Component{
 
     async blockContact(userIdToBlock){
         this.clearErrorMessages()
-        console.log(userIdToBlock)
-        fetch("http://localhost:3333/api/1.0.0/user/"+userIdToBlock+"/block", 
+        return fetch("http://localhost:3333/api/1.0.0/user/"+userIdToBlock+"/block", 
         {
             method: "POST",
             headers: {
@@ -82,7 +81,7 @@ export default class DisplayContacts extends Component{
             }
             else if (response.status === 404) throw "User not found!"
             else if (response.status === 400) throw "You can't block yourself"
-            else throw "Something went wrong while retrieving your data"
+            else throw "Something went wrong while trying to block the account"
           })
         .catch((thisError) => {
             this.setState({error: thisError})
