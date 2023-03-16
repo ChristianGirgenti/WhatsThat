@@ -18,14 +18,12 @@ export default class DisplayConversations extends Component{
             chatId: "",
             conversations: [],  
             error: "",
-            fullName: ""
         }
     }
 
     componentDidMount() {
         this.props.navigation.addListener('focus', () => {
             this.setState({conversationTitle: ""})
-            this.getUserInformation();
             this.viewAllChats();
         })   
     }
@@ -83,7 +81,6 @@ export default class DisplayConversations extends Component{
                 this.props.navigation.navigate('Conversation', {
                     conversationTitle: this.state.conversationTitle,
                     chatId: data.chat_id,
-                    userName: this.state.fullName
                 });
 
             } 
@@ -105,38 +102,8 @@ export default class DisplayConversations extends Component{
         this.setState({error: ""})
       }
 
-
-    async getUserInformation(){
-        this.clearErrorMessages()
-
-        const userId = await AsyncStorage.getItem("whatsthat_user_id")
-        return fetch("http://localhost:3333/api/1.0.0/user/"+userId,
-        {
-            method: 'get',
-            headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
-          })
-        .then(async (response) => {
-            if (response.status === 200) return response.json();
-            else if (response.status === 401) {
-                console.log("Unauthorised")
-                await AsyncStorage.removeItem("whatsthat_session_token")
-                await AsyncStorage.removeItem("whatsthat_user_id")
-                this.props.navigation.navigate("Login")
-            }
-            else throw "Something went wrong while retrieving your data"
-          })
-        .then((responseJson) => {
-            this.setState({
-                fullName: responseJson.first_name + " " + responseJson.last_name,
-            })
-        })
-        .catch((thisError) => {
-            this.setState({error: thisError})
-        })
-    }
-
     renderItem = ({item}) => {
-        return <PreviewConversation chatId={item.chat_id} name={item.name} lastMessage={item.last_message.message} navigation={this.props.navigation} userName={this.state.fullName}/>
+        return <PreviewConversation chatId={item.chat_id} name={item.name} lastMessage={item.last_message.message} navigation={this.props.navigation}/>
     }
 
     render(){

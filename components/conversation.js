@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-import {View, FlatList, StyleSheet, Text, TouchableOpacity, Image, TextInput} from 'react-native';
+import {View, FlatList, StyleSheet, Text, TouchableOpacity, TextInput} from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import Message from './message';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +15,7 @@ export default class Conversation extends Component{
 
         this.state = {
             conversation: [],
+            messages: [],
             message: "",
             error: ""
         }
@@ -27,15 +28,17 @@ export default class Conversation extends Component{
     }
 
     renderItem = ({item}) => {
-        console.log(item)
-        return <Message userName={item.user_name} message={item.message} user_id={item.user_id} time={item.message_time} />
+        return <Message userName={item.author.first_name+" "+item.author.last_name} 
+                        message={item.message} 
+                        user_id={item.author.user_id} 
+                        time={new Date(item.timestamp).toLocaleString()} />
     }
 
     clearErrorMessages() {
         this.setState({error: ""})
       }
 
-    async send(chatId, userName){
+    async send(chatId){
         this.clearErrorMessages();
         if (this.state.message === "")
         {
@@ -56,21 +59,8 @@ export default class Conversation extends Component{
         })
         .then(async (response) => { 
             if (response.status === 200) {
-                console.log("OK")
-
-                console.log(response.json)
-                const myId = await AsyncStorage.getItem("whatsthat_user_id")
-                const newMessage = {
-                    message: this.state.message,
-
-                    user_id : myId,
-                    user_name: userName,
-                    message_time: new Date(Date.now()).toLocaleString()
-                    
-                }
-               
-                const updatedConversation = [...this.state.conversation, newMessage];
-                this.setState({conversation: updatedConversation, message: ""});
+                this.setState({message: ""})
+                this.viewSingleChatDetail(chatId)
             } 
             else if (response.status === 401) {
                 console.log("Unauthorised")
@@ -87,7 +77,6 @@ export default class Conversation extends Component{
     }
 
     async viewSingleChatDetail(chatId) {
-        console.log("hi")
         this.clearErrorMessages()
         return fetch("http://localhost:3333/api/1.0.0/chat/"+chatId,
         {
@@ -97,20 +86,9 @@ export default class Conversation extends Component{
         .then(async (response) => {
             if (response.status === 200)
             {
-
                 const responseJson = await response.json();
-                const conversationObject = [];
-                responseJson.messages.forEach((msg) => {
-                    const messageObject = {
-                        message: msg.message,
-                        user_id: msg.author.user_id,
-                        user_name: msg.author.first_name + " " + msg.author.last_name,
-                        message_id: msg.message_id,
-                        message_time: new Date(msg.timestamp).toLocaleString()
-                    }
-                    conversationObject.unshift(messageObject);
-                })
-                this.setState({conversation: conversationObject})
+                this.setState({conversation: responseJson})
+                this.setState({messages: this.state.conversation.messages.slice().reverse()})
             } 
             else if (response.status === 401) {
                 console.log("Unauthorised")
@@ -127,7 +105,6 @@ export default class Conversation extends Component{
 
     render(){
         const {conversationTitle} = this.props.route.params;
-        const {userName} = this.props.route.params;
         const {chatId} = this.props.route.params;
         return(
             <View style={GlobalStyle.mainContainer}>
@@ -135,7 +112,7 @@ export default class Conversation extends Component{
 
                 <View style={GlobalStyle.wrapper}>
                     <FlatList 
-                        data={this.state.conversation}
+                        data={this.state.messages}
                         renderItem={this.renderItem}
                         keyExtractor={(item,index) => index.toString()}
                     />
@@ -158,7 +135,7 @@ export default class Conversation extends Component{
                         value={this.state.message}
                         maxLength={70}
                         />
-                    <TouchableOpacity onPress={() => this.send(chatId, userName)}>
+                    <TouchableOpacity onPress={() => this.send(chatId)}>
                         <Icon name="send" color={'black'} size={40} />
                     </TouchableOpacity>
                 </View>        

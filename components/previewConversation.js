@@ -13,7 +13,6 @@ export default class PreviewConversation extends Component {
         this.props.navigation.navigate('Conversation', {
             conversationTitle: this.props.name,
             chatId: this.props.chatId,
-            userName: this.props.userName
         });
       }
   
