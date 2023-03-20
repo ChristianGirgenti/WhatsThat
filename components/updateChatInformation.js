@@ -155,9 +155,11 @@ export default class UpdateChatInformation extends Component{
 
     }
 
-    async addToTheChat(userId)
+    async addNewMembers(chatId)
     {
-    
+        this.props.navigation.navigate("AddNewMembersToChat" , {
+            chatId: chatId,
+        })
     }
 
     async removeFromTheChat(chatId, userId)
@@ -173,7 +175,7 @@ export default class UpdateChatInformation extends Component{
             },   
         })
         .then(async (response) => { 
-            if (response.status === 200) {
+            if (response.status === 200) {               
                 this.getChatMembers(chatId)
             }
             else if (response.status === 401) {
@@ -238,7 +240,10 @@ export default class UpdateChatInformation extends Component{
                             data={this.state.chatMembers}
                             renderItem= {this.renderItem}
                             keyExtractor={(item,index) => index.toString()}
-                        />                                                                          
+                        />   
+                        <TouchableOpacity style={GlobalStyle.button} onPress={() => this.addNewMembers(this.props.route.params.chatId)}>
+                            <Text style={[GlobalStyle.buttonText, styles.addMembersButtonText]}>Add New Members</Text>
+                        </TouchableOpacity>                                                                            
                     </View>       
                 </View>
             </View>
@@ -270,6 +275,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
         marginBottom: 10
+    },
+    addMembersButtonText: {
+        textAlign: 'center'
     }
 })
 

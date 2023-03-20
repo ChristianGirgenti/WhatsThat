@@ -24,6 +24,7 @@ export default class DisplayConversations extends Component{
     componentDidMount() {
         this.props.navigation.addListener('focus', () => {
             this.setState({conversationTitle: ""})
+            this.setState({conversations: []})
             this.viewAllChats();
         })   
     }
