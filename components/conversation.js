@@ -103,12 +103,24 @@ export default class Conversation extends Component{
         })
     }
 
+    updateTitle(chatId, conversationTitle){
+        this.props.navigation.navigate("UpdateChatInformation" , {
+            chatId: chatId,
+            conversationTitle: conversationTitle
+        })
+    }
+
     render(){
         const {conversationTitle} = this.props.route.params;
         const {chatId} = this.props.route.params;
         return(
             <View style={GlobalStyle.mainContainer}>
-                <NavigationHeaderWithIcon navigation={this.props.navigation} title={conversationTitle} />
+                <View style={styles.titleSection}>
+                    <NavigationHeaderWithIcon navigation={this.props.navigation} title={conversationTitle} />
+                    <TouchableOpacity onPress={() => this.updateTitle(chatId, conversationTitle)}>
+                        <Icon name="note-edit-outline" color={'black'} size={30} />
+                    </TouchableOpacity>
+                </View>
 
                 <View style={GlobalStyle.wrapper}>
                     <FlatList 
@@ -159,11 +171,10 @@ const styles = StyleSheet.create({
         padding:6,
         textAlignVertical: 'top'
     },
-    titleHeaderSection: {
-        justifyContent: 'flex-start'
-    },
-    titleText: {
-        flex: 0.9
+    titleSection:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#25D366',
     }
 })
 
