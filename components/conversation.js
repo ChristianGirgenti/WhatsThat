@@ -96,6 +96,11 @@ export default class Conversation extends Component{
                 await AsyncStorage.removeItem("whatsthat_user_id")
                 this.props.navigation.navigate("Login")
             }
+            else if (response.status === 403) throw "Cannot access this chat"
+            else if (response.status === 404) {
+                console.log("Chat not found");
+                this.props.navigation.navigate("DisplayConversation")
+            }
             else throw "Something went wrong while retrieving your data"
           })
         .catch((thisError) => {
