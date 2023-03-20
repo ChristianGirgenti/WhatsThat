@@ -22,8 +22,16 @@ export default class PreviewConversation extends Component {
             <TouchableOpacity  onPress={() => this.openConversation()}>
                 <View style={styles.conversationContainer}>                    
                     <View style={styles.textContainer}>
-                        <Text style={[GlobalStyle.baseText, styles.contactNameText]}>{this.props.name}</Text>
-                        <Text numberOfLines={1} style={[GlobalStyle.baseText]}>{this.props.lastMessage}</Text>
+                        <View style={styles.firstRow}>
+                            <Text style={[GlobalStyle.baseText, styles.contactNameText]}>{this.props.name}</Text>
+                            <Text>
+                                {this.props.lastMessageTime ? new Date(this.props.lastMessageTime).toLocaleString() : ''}
+                            </Text> 
+                        </View>
+                        <Text numberOfLines={1} style={[GlobalStyle.baseText]}>{this.props.lastMessageSenderFirstName} 
+                                                                               {this.props.lastMessageSenderLastName ?  ` ${this.props.lastMessageSenderLastName}: ` : ''} 
+                                                                               {this.props.lastMessage}
+                        </Text>
                     </View>
                 
                 </View>
@@ -50,5 +58,11 @@ export default class PreviewConversation extends Component {
         },
         contactNameText:{
             fontWeight: 'bold'
+        },
+        firstRow:{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 3,
+            marginRight: 10
         }
     });

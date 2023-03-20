@@ -103,7 +103,13 @@ export default class DisplayConversations extends Component{
       }
 
     renderItem = ({item}) => {
-        return <PreviewConversation chatId={item.chat_id} name={item.name} lastMessage={item.last_message.message} navigation={this.props.navigation}/>
+        console.log(item)
+        return <PreviewConversation chatId={item.chat_id} name={item.name} lastMessage={item.last_message.message} 
+                                    navigation={this.props.navigation} 
+                                    lastMessageSenderFirstName={item.last_message.author ? item.last_message.author.first_name : null}
+                                    lastMessageSenderLastName={item.last_message.author ? item.last_message.author.last_name : null}
+                                    lastMessageTime={item.last_message.timestamp}
+                                    />
     }
 
     render(){
