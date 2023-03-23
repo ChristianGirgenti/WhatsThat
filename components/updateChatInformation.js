@@ -82,10 +82,17 @@ export default class UpdateChatInformation extends Component{
                 await AsyncStorage.removeItem("whatsthat_user_id")
                 this.props.navigation.navigate("Login")
             }
+            else if (response.status === 403) {
+                //This is returning when user delete itself from a chat and there were other members in the chat.
+                //When trying to get the remaining members, the chatId is not found as the chat is eliminated so the user is not allowed to get the 
+                //remaining members, hence, it redirects to all chat
+                console.log("You deleted the chat")
+                this.props.navigation.navigate("DisplayConversation")
+            }
             else if (response.status === 404) {
                 //This is returning when user delete itself from a chat and they were the last one in the chat.
-                //When trying to get the remaining members, the chatId is not found as the chat is eliminated if there are
-                //not sure, hence, it redirects to all chat
+                //When trying to get the remaining members, the chatId is not found as the chat is eliminated so
+                //it redirects to all chat
                 console.log("Chat not found");
                 this.props.navigation.navigate("DisplayConversation")
             }
@@ -94,9 +101,6 @@ export default class UpdateChatInformation extends Component{
             this.setState({error: thisError.toString()})
         })
     }
-
-
-
 
     clearErrorMessages() {
         this.setState({error: ""})
