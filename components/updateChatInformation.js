@@ -83,18 +83,18 @@ export default class UpdateChatInformation extends Component{
                 this.props.navigation.navigate("Login")
             }
             else if (response.status === 403) {
-                //This is returning when user delete itself from a chat and there were other members in the chat.
-                //When trying to get the remaining members, the chatId is not found as the chat is eliminated so the user is not allowed to get the 
-                //remaining members, hence, it redirects to all chat
-                console.log("You deleted the chat")
-                this.props.navigation.navigate("DisplayConversation")
+                //This is returning when user delete itself from a chat that has still members partecipating.
+                //When trying to get the remaining members, the API returns a 403 because the user is forbidden to access the chat as it is not part of it anymore,
+                //so the user will get send back to the display conversations screen. To note is that the chat will still exist for the remaining members.
+                console.log("You can not access this chat anymore")
+                this.props.navigation.navigate("DisplayConversations")
             }
             else if (response.status === 404) {
-                //This is returning when user delete itself from a chat and they were the last one in the chat.
-                //When trying to get the remaining members, the chatId is not found as the chat is eliminated so
-                //it redirects to all chat
-                console.log("Chat not found");
-                this.props.navigation.navigate("DisplayConversation")
+                //This is returning when a user removes their account from the chat and was the last one in the chat. 
+                //In this scenario, the chat is deleted, so when try to get the members, the API call will return a 404 as the chat no longer exists.
+                //The user is send back to the display conversations screen.
+                console.log("The chat has been deleted")
+                this.props.navigation.navigate("DisplayConversations")
             }
           })
         .catch((thisError) => {
@@ -139,7 +139,7 @@ export default class UpdateChatInformation extends Component{
             if (response.status === 200) {
                 console.log("Updated");
                 this.setState({submitted : false});
-                this.props.navigation.navigate("DisplayConversation")
+                this.props.navigation.navigate("DisplayConversations")
             }  
             else if (response.status === 400) throw "Bad Request"
             else if (response.status === 401) {

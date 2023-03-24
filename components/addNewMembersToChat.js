@@ -51,7 +51,12 @@ export default class AddNewMembersToChat extends Component {
             }
             else if (response.status === 404) throw "Contact not found!"
             else if (response.status === 403) throw "You can not add this account to the chat"
-            else if (response.status === 400) throw "This contact is already part of the chat"
+            //The bad request below returns if trying to add to the chat a user already part of the chat or trying to add a user not belonging in the contact list.
+            //I tried to remove the last scenario by only giving a chance to the user to add members of the contact list through the front-end.
+            //However, there is a bug in the API where if User A add User B as contact, User A will automatically be added to User B contact list.
+            //When logged in with User B, User A will appear in User B contact list, however, if User B tries to add User A to the chat, 
+            //will look like User A is not part of the User B contact list so will return the 400.
+            else if (response.status === 400) throw "This user is already part of the chat or is not in your contact"
             else throw "Something went wrong while retrieving your data"
           })
         .catch((thisError) => {

@@ -49,6 +49,7 @@ export default class PreviewConversation extends Component {
             justifyContent: 'flex-start',
             alignItems: 'center',
             borderBottomWidth: 1,
+            paddingBottom: 5
         },
         textContainer: {
             flex:1,
