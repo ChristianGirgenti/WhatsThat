@@ -5,6 +5,8 @@ import NavigationHeader from './screenForNavigation/navigationHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Contact from './contact';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PaginationDropdown from './paginationDropdown';
+import Pagination from './pagination';
 
 export default class SearchUsers extends Component {
 
@@ -19,22 +21,13 @@ export default class SearchUsers extends Component {
             searchTerm: "",
             searchResults: [],
             error: "",
-            currentUserId: 0
+            currentUserId: 0,
+            currentPage: 1,
+            pageSize: 20,
+            totalPages: 0
           }
+        this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
       }
-
-    renderItem = ({item}) => {
-        if (item.user_id != this.state.currentUserId)
-        {
-            return <View style={styles.contactViewContainer}>
-                    <Contact name={item.given_name} lastName={item.family_name} imageSource={item.photo} style={styles.contact}/>
-                    
-                    <TouchableOpacity style={styles.addButton} onPress={() => this.addContact(item.user_id)}>
-                        <Icon name="account-plus" color={'green'} size={40} />
-                    </TouchableOpacity>                 
-                   </View>                
-        }
-    }
 
     clearErrorMessages() {
         this.setState({error: ""})
@@ -70,50 +63,6 @@ export default class SearchUsers extends Component {
 
     };
 
-    async search(searchTerm, location) 
-    {   
-        this.clearErrorMessages()
-        this.state.currentUserId =  await AsyncStorage.getItem("whatsthat_user_id");
-        if (searchTerm === "") {
-            this.setState({searchTerm: ""})
-            this.setState({searchResults : []})
-            return
-        }
-        this.setState({searchTerm: searchTerm});
-        return fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location,
-        {
-            method: 'GET',
-            headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
-          })
-        .then(async (response) => {
-            if (response.status === 200)
-            {
-                const responseJson = await response.json();
-                //RESPONSEJSON HERE WAS ONLY HOLDING INFORMATION ABOUT ID, NAME, LASTNAME, AND EMAIL OF THE CONTACT
-                //I NEEDED TO ADD THE PHOTO IN RESPONSE SOMEHOW
-                //WITH THE CALL BELOW, I AM MAKING MANY ASYNCRONOUS CALL OF GETCONTACT PHOTO USING PROMISE AND THEN MAPPING IT TO ITEM.
-                //IN THIS WAY, I AM ADDING THE PHOTO URL AS NEW FIELD OF RESPONSEJSON AND IT IS ASSIGNED TO UPDATED RESPONSEJSON
-                //I AM THEN SETTING MY SEARCH RESULTS STATUS
-                
-                const updatedResponseJson = await Promise.all(responseJson.map(async (item) => {
-                    const photo = await this.getContactPhoto(item.user_id);
-                    return {...item, photo}
-                }));
-                this.setState({searchResults: updatedResponseJson})
-            } 
-            else if (response.status === 401) {
-                console.log("Unauthorised")
-                await AsyncStorage.removeItem("whatsthat_session_token")
-                await AsyncStorage.removeItem("whatsthat_user_id")
-                this.props.navigation.navigate("Login")
-            }
-            else throw "Something went wrong while retrieving your data"
-          })
-        .catch((thisError) => {
-            this.setState({error: thisError.toString()})
-        })
-    };
-
     async addContact(userIdToAdd){
         this.clearErrorMessages()
         fetch("http://localhost:3333/api/1.0.0/user/"+userIdToAdd+"/contact", 
@@ -143,6 +92,79 @@ export default class SearchUsers extends Component {
         })
     };
 
+
+    async search(searchTerm, location) 
+    {   
+        console.log(this.state.pageSize)
+        this.clearErrorMessages()
+        this.state.currentUserId =  await AsyncStorage.getItem("whatsthat_user_id");
+        if (searchTerm === "") {
+            this.setState({searchTerm: ""})
+            this.setState({searchResults : []})
+            return
+        }
+        this.setState({searchTerm: searchTerm});
+        return fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location+"&limit="+this.state.pageSize+"&offset="+(this.state.currentPage-1)*this.state.pageSize,
+        {
+            method: 'GET',
+            headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
+          })
+        .then(async (response) => {
+            if (response.status === 200)
+            {
+                const responseJson = await response.json();
+                //RESPONSEJSON HERE WAS ONLY HOLDING INFORMATION ABOUT ID, NAME, LASTNAME, AND EMAIL OF THE CONTACT
+                //I NEEDED TO ADD THE PHOTO IN RESPONSE SOMEHOW
+                //WITH THE CALL BELOW, I AM MAKING MANY ASYNCRONOUS CALL OF GETCONTACT PHOTO USING PROMISE AND THEN MAPPING IT TO ITEM.
+                //IN THIS WAY, I AM ADDING THE PHOTO URL AS NEW FIELD OF RESPONSEJSON AND IT IS ASSIGNED TO UPDATED RESPONSEJSON
+                //I AM THEN SETTING MY SEARCH RESULTS STATUS
+                
+                const updatedResponseJson = await Promise.all(responseJson.map(async (item) => {
+                    const photo = await this.getContactPhoto(item.user_id);
+                    return {...item, photo}
+                }));
+                this.setState({searchResults: updatedResponseJson})
+                //this.setState({totalPages: updatedResponseJson.pagination.total_pages})
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else throw "Something went wrong while retrieving your data"
+          })
+        .catch((thisError) => {
+            this.setState({error: thisError.toString()})
+        })
+    };
+
+    
+    renderItem = ({item}) => {
+        if (item.user_id != this.state.currentUserId)
+        {
+            return <View style={styles.contactViewContainer}>
+                    <Contact name={item.given_name} lastName={item.family_name} imageSource={item.photo} style={styles.contact}/>
+                    
+                    <TouchableOpacity style={styles.addButton} onPress={() => this.addContact(item.user_id)}>
+                        <Icon name="account-plus" color={'green'} size={40} />
+                    </TouchableOpacity>                 
+                   </View>                
+        }
+    }
+
+    handlePageSizeChange(pageSize){
+        this.setState({ pageSize });
+    }
+      
+
+    handlePageChange = (page) => {
+        this.setState({ currentPage: page });
+        const offset = (page - 1) * this.state.pageSize;
+        this.search(this.state.searchTerm, "all", this.state.pageSize, offset);
+      };
+
+
     render() {
         return (
             <View style={GlobalStyle.mainContainer}>
@@ -154,6 +176,7 @@ export default class SearchUsers extends Component {
                         onChangeText={(searchTerm) => this.setState({searchTerm})}
                         placeholder="Search..."
                     />
+                    <PaginationDropdown onValueChange={this.handlePageSizeChange}></PaginationDropdown>
                     <View style={styles.groupSearchButton}>
                         <TouchableOpacity style={styles.searchButton} onPress={() => this.search(this.state.searchTerm, "all")}>
                             <Icon name="search-web" color={'green'} size={40} />
@@ -182,6 +205,11 @@ export default class SearchUsers extends Component {
                         renderItem= {this.renderItem}
                         keyExtractor={(item,index) => index.toString()}
                     />
+                    {/* <Pagination
+                        currentPage={this.state.currentPage}
+                        totalPages={this.state.totalPages}
+                        onPageChange={this.handlePageChange}
+                    /> */}
                     </View>
 
                 </View>
@@ -227,5 +255,8 @@ export default class SearchUsers extends Component {
         },
         searchButton:{
             alignItems: 'center'
+        },
+        limitParameterGroup:{
+            flexDirection: 'row'
         }
     });
