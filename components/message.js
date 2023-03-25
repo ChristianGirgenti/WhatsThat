@@ -11,7 +11,8 @@ export default class Message extends Component {
         super(props);
         this.state = {
             myUserId: null,
-            isMyMessage: false
+            isMyMessage: false,
+            error: ""
         }
       }
 
@@ -27,15 +28,23 @@ export default class Message extends Component {
             ? styles.from_me : styles.other]}>
                     <View style={styles.firstRow}>
                         <Text style={styles.author}>{this.props.userName}</Text>
-                        {this.state.isMyMessage && (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate("EditMessage", {
-                                message: this.props.message,
-                                chatId: this.props.chatId,
-                                messageId: this.props.messageId
-                            })} >
-                                <Icon name="note-edit-outline" color={'black'} size={20} />
-                            </TouchableOpacity>
-                        )}
+                        <View style={styles.buttonGroup}>
+                            {this.state.isMyMessage && (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate("EditMessage", {
+                                    message: this.props.message,
+                                    chatId: this.props.chatId,
+                                    messageId: this.props.messageId
+                                })} >
+                                    <Icon name="note-edit-outline" color={'black'} size={20} />
+                                </TouchableOpacity>
+                            )}
+
+                            {this.state.isMyMessage && (
+                                <TouchableOpacity onPress={async () => await this.props.onPress(this.props.chatId, this.props.messageId)}>
+                                    <Icon name="trash-can-outline" color={'black'} size={20} />
+                                </TouchableOpacity>
+                            )}
+                        </View>                        
                     </View> 
                     <Text style={styles.content}>{this.props.message}</Text>
                     <Text style={styles.time}>{this.props.time}</Text>
@@ -50,7 +59,7 @@ export default class Message extends Component {
             borderRadius: 15,
             padding: 5,
             margin: 5,
-            width: '40%' 
+            width: '48%' 
         },
         author: {
             fontWeight: 'bold',
@@ -71,5 +80,10 @@ export default class Message extends Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
+        },
+        buttonGroup: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '30%'
         }
     })

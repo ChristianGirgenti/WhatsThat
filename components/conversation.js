@@ -19,6 +19,8 @@ export default class Conversation extends Component{
             message: "",
             error: ""
         }
+
+        this.deleteMessage = this.deleteMessage.bind(this);
     }
 
     componentDidMount(){
@@ -32,7 +34,7 @@ export default class Conversation extends Component{
                         message={item.message} 
                         messageId = {item.message_id}
                         user_id={item.author.user_id} 
-                        onPress={this.editMessage}
+                        onPress={this.deleteMessage}
                         time={new Date(item.timestamp).toLocaleString()} 
                         navigation={this.props.navigation}
                         chatId = {this.props.route.params.chatId}
@@ -41,7 +43,39 @@ export default class Conversation extends Component{
 
     clearErrorMessages() {
         this.setState({error: ""})
-      }
+    }
+
+
+    async deleteMessage(chatId, messageId){
+        this.clearErrorMessages()
+
+        return fetch("http://localhost:3333/api/1.0.0/chat/"+chatId+"/message/"+messageId, 
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Authorization": await AsyncStorage.getItem("whatsthat_session_token")
+            },   
+        })
+        .then(async (response) => { 
+            if (response.status === 200) {
+                this.viewSingleChatDetail(chatId)
+            } 
+            else if (response.status === 401) {
+                console.log("Unauthorised")
+                await AsyncStorage.removeItem("whatsthat_session_token")
+                await AsyncStorage.removeItem("whatsthat_user_id")
+                this.props.navigation.navigate("Login")
+            }
+            else if (response.status === 404) throw "Message not found!"
+            else if (response.status === 400) throw "You can't delete this message"
+            else throw "Something went wrong while retrieving your data"
+          })
+        .catch((thisError) => {
+            this.setState({error: thisError})
+        })
+    }
+
 
     async send(chatId){
         this.clearErrorMessages();
