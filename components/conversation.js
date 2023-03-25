@@ -30,8 +30,13 @@ export default class Conversation extends Component{
     renderItem = ({item}) => {
         return <Message userName={item.author.first_name+" "+item.author.last_name} 
                         message={item.message} 
+                        messageId = {item.message_id}
                         user_id={item.author.user_id} 
-                        time={new Date(item.timestamp).toLocaleString()} />
+                        onPress={this.editMessage}
+                        time={new Date(item.timestamp).toLocaleString()} 
+                        navigation={this.props.navigation}
+                        chatId = {this.props.route.params.chatId}
+                />
     }
 
     clearErrorMessages() {
