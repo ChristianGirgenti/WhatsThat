@@ -10,8 +10,9 @@ import Pagination from './pagination';
 
 export default class SearchUsers extends Component {
 
-    //Currently it is not really possible to do the pagination as if I set limit to 5 , the API call will return only 5 contacts,
-    //that means pagination won't be needed. 
+    //WHEN I ADD A USER TO MY CONTACTS, DO I STILL WANT TO DISPLAY IT AS RESULT OF MY USER SEARCH??
+    //I AM NOT SHOWING MY OWN ACCOUNT IN THE SEARCH, IS THAT OK ?
+    //ONCE I TAKE A PICTURE, IT DOESN'T UPDATE IT STRAIGHT AWAY BUT ON CHANGE OF WINDOW. 
 
     constructor(props){
         super(props);
@@ -21,9 +22,9 @@ export default class SearchUsers extends Component {
             searchResults: [],
             error: "",
             currentUserId: 0,
-            //currentPage: 1,
+            currentPage: 1,
             pageSize: 20,
-           // totalPages: 0
+            totalPages: 0
           }
         this.handlePageSizeChange = this.handlePageSizeChange.bind(this)
       }
@@ -103,9 +104,7 @@ export default class SearchUsers extends Component {
             return
         }
         this.setState({searchTerm: searchTerm});
-
-        //With pagination: fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location+"&limit="+this.state.pageSize+"&offset="+(this.state.currentPage-1)*this.state.pageSize
-        return fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location+"&limit="+this.state.pageSize,
+        return fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location+"&limit="+this.state.pageSize+"&offset="+(this.state.currentPage-1)*this.state.pageSize,
         {
             method: 'GET',
             headers: {'X-Authorization': await AsyncStorage.getItem("whatsthat_session_token")}   
@@ -114,7 +113,6 @@ export default class SearchUsers extends Component {
             if (response.status === 200)
             {
                 const responseJson = await response.json();
-                console.log(responseJson)
                 //RESPONSEJSON HERE WAS ONLY HOLDING INFORMATION ABOUT ID, NAME, LASTNAME, AND EMAIL OF THE CONTACT
                 //I NEEDED TO ADD THE PHOTO IN RESPONSE SOMEHOW
                 //WITH THE CALL BELOW, I AM MAKING MANY ASYNCRONOUS CALL OF GETCONTACT PHOTO USING PROMISE AND THEN MAPPING IT TO ITEM.
@@ -125,11 +123,8 @@ export default class SearchUsers extends Component {
                     const photo = await this.getContactPhoto(item.user_id);
                     return {...item, photo}
                 }));
-
                 this.setState({searchResults: updatedResponseJson})
-                //this.setState({totalPages: Math.ceil(updatedResponseJson.length/this.state.pageSize)})
-               // console.log(this.state.totalPages)
-                console.log(updatedResponseJson)
+                //this.setState({totalPages: updatedResponseJson.pagination.total_pages})
             } 
             else if (response.status === 401) {
                 console.log("Unauthorised")
@@ -163,12 +158,11 @@ export default class SearchUsers extends Component {
     }
       
 
-    // handlePageChange(){
-    //     console.log("HI")
-    //     this.setState({ currentPage: page });
-    //     const offset = (page - 1) * this.state.pageSize;
-    //     this.search(this.state.searchTerm, "all", this.state.pageSize, offset);
-    //   };
+    handlePageChange = (page) => {
+        this.setState({ currentPage: page });
+        const offset = (page - 1) * this.state.pageSize;
+        this.search(this.state.searchTerm, "all", this.state.pageSize, offset);
+      };
 
 
     render() {
@@ -264,5 +258,5 @@ export default class SearchUsers extends Component {
         },
         limitParameterGroup:{
             flexDirection: 'row'
-        },
+        }
     });
