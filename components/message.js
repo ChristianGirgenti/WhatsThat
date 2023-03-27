@@ -1,22 +1,11 @@
 import React, { Component } from 'react';
-import {
-  Text, StyleSheet, View, TouchableOpacity,
-} from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default class Message extends Component {
   constructor(props) {
     super(props);
-
-    this.user_id = props.user_id;
-    this.navigation = props.navigation;
-    this.userName = props.userName;
-    this.chatId = props.chatId;
-    this.messageId = props.messageId;
-    this.onPress = props.onPress;
-    this.time = props.time;
-
     this.state = {
       myUserId: null,
       isMyMessage: false,
@@ -24,48 +13,43 @@ export default class Message extends Component {
   }
 
   async componentDidMount() {
-    const userId = await AsyncStorage.getItem('whatsthat_user_id');
-    this.setState({ myUserId: userId });
-    const { myUserId } = this.state;
+    const myUserId = await AsyncStorage.getItem('whatsthat_user_id');
+    this.setState({ myUserId });
     this.setState(
       {
-        isMyMessage: myUserId.toString() === this.user_id.toString(),
+        isMyMessage: this.state.myUserId.toString() === this.props.user_id.toString(),
       },
     );
   }
 
   render() {
-    const { isMyMessage } = this.state;
-    const { message } = this.props;
     return (
-      <View style={[styles.message, isMyMessage
-        ? styles.from_me : styles.other]}
-      >
+      <View style={[styles.message, this.state.isMyMessage
+        ? styles.from_me : styles.other]}>
         <View style={styles.firstRow}>
-          <Text style={styles.author}>{this.userName}</Text>
+          <Text style={styles.author}>{this.props.userName}</Text>
           <View style={styles.buttonGroup}>
-            {isMyMessage && (
-            <TouchableOpacity onPress={() => this.navigation.navigate('EditMessage', {
-              message,
-              chatId: this.chatId,
-              messageId: this.messageId,
+            {this.state.isMyMessage && (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditMessage', {
+              message: this.props.message,
+              chatId: this.props.chatId,
+              messageId: this.props.messageId
             })}
             >
-              <Icon name="note-edit-outline" color="black" size={20} />
+              <Icon name="note-edit-outline" color={'black'} size={20} />
             </TouchableOpacity>
             )}
-            {isMyMessage && (
+            {this.state.isMyMessage && (
             <TouchableOpacity onPress={
-                async () => this.onPress(this.chatId, this.messageId)
-}
+                async () => await this.props.onPress(this.props.chatId, this.props.messageId)}
             >
-              <Icon name="trash-can-outline" color="black" size={20} />
+              <Icon name="trash-can-outline" color={'black'} size={20} />
             </TouchableOpacity>
             )}
           </View>
         </View>
-        <Text style={styles.content}>{message}</Text>
-        <Text style={styles.time}>{this.time}</Text>
+        <Text style={styles.content}>{this.props.message}</Text>
+        <Text style={styles.time}>{this.props.time}</Text>
       </View>
     );
   }
@@ -87,7 +71,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   other: {
-    backgroundColor: 'limegreen',
+    backgroundColor: 'limegreen', 
   },
   from_me: {
     backgroundColor: 'skyblue',

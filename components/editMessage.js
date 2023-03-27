@@ -12,7 +12,6 @@ export default class EditMessage extends Component {
     super(props);
 
     this.route = props.route;
-    this.navigation = props.navigation;
 
     this.state = {
       error: '',
