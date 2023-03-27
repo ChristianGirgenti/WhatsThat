@@ -133,15 +133,8 @@ export default class SearchUsers extends Component {
       .then(async (response) => {
         if (response.status === 200) {
           const responseJson = await response.json();
-          // RESPONSEJSON HERE WAS ONLY HOLDING INFORMATION
-          // ABOUT ID, NAME, LASTNAME, AND EMAIL OF THE CONTACT
-          // I NEEDED TO ADD THE PHOTO IN RESPONSE SOMEHOW
-          // WITH THE CALL BELOW, I AM MAKING MANY ASYNCRONOUS CALL OF
-          // GETCONTACT PHOTO USING PROMISE AND THEN MAPPING IT TO ITEM.
-          // IN THIS WAY, I AM ADDING THE PHOTO URL AS
-          // NEW FIELD OF RESPONSEJSON AND IT IS ASSIGNED TO UPDATED RESPONSEJSON
-          // I AM THEN SETTING MY SEARCH RESULTS STATUS
 
+          // Mapping used to add the photo to updatedResponseJson
           const updatedResponseJson = await Promise.all(responseJson.map(async (item) => {
             const photo = await this.getContactPhoto(item.user_id);
             return { ...item, photo };
