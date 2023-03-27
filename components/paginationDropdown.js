@@ -4,19 +4,22 @@ import { Picker } from 'react-native';
 export default class PaginationDropdown extends Component {
   constructor(props) {
     super(props);
+
+    this.onValueChange = props.onValueChange;
     this.state = {
-      selectedValue: 20 //default
+      selectedValue: 20, // default
     };
   }
 
   render() {
     const options = [5, 10, 15, 20, 25];
+    const { selectedValue } = this.state;
     return (
       <Picker
-        selectedValue={this.state.selectedValue}
+        selectedValue={selectedValue}
         onValueChange={(itemValue) => {
           this.setState({ selectedValue: itemValue });
-          this.props.onValueChange(itemValue)
+          this.onValueChange(itemValue);
         }}
       >
         {options.map((option) => (

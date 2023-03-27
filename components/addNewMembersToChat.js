@@ -92,6 +92,8 @@ export default class AddNewMembersToChat extends Component {
 
   async addNewMember(chatId, userId) {
     this.clearErrorMessages();
+    console.log(chatId)
+    console.log(userId)
     return fetch(
       `http://localhost:3333/api/1.0.0/chat/${chatId}/user/${userId}`,
       {
