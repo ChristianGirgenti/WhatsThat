@@ -9,39 +9,40 @@ export default class PreviewConversation extends Component {
     super(props);
 
     this.navigation = props.navigation;
-    this.chatId = props.chatId;
-    this.name = props.name;
-    this.lastMessageTime = props.lastMessageTime;
-    this.lastMessage = props.lastMessage;
-    this.lastMessageSenderFirstName = props.lastMessageSenderFirstName;
-    this.lastMessageSenderLastName = props.lastMessageSenderLastName;
   }
 
   openConversation() {
+    const { name } = this.props;
+    const { chatId } = this.props;
+
     this.navigation.navigate('Conversation', {
-      conversationTitle: this.name,
-      chatId: this.chatId,
+      conversationTitle: name,
+      chatId,
     });
   }
 
   render() {
+    const { name } = this.props;
+    const { lastMessageTime } = this.props;
+    const { lastMessage } = this.props;
+    const { lastMessageSenderFirstName } = this.props;
+    const { lastMessageSenderLastName } = this.props;
     return (
       <TouchableOpacity onPress={() => this.openConversation()}>
         <View style={styles.conversationContainer}>
           <View style={styles.textContainer}>
             <View style={styles.firstRow}>
-              <Text style={[GlobalStyle.baseText, styles.contactNameText]}>{this.name}</Text>
+              <Text style={[GlobalStyle.baseText, styles.contactNameText]}>{name}</Text>
               <Text>
-                {this.lastMessageTime ? new Date(this.lastMessageTime).toLocaleString() : ''}
+                {lastMessageTime ? new Date(lastMessageTime).toLocaleString() : ''}
               </Text>
             </View>
             <Text numberOfLines={1} style={[GlobalStyle.baseText]}>
-              {this.lastMessageSenderFirstName}
-              {this.lastMessageSenderLastName ? ` ${this.lastMessageSenderLastName}: ` : ''}
-              {this.lastMessage}
+              {lastMessageSenderFirstName}
+              {lastMessageSenderLastName ? ` ${lastMessageSenderLastName}: ` : ''}
+              {lastMessage}
             </Text>
           </View>
-
         </View>
       </TouchableOpacity>
     );

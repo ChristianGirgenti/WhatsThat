@@ -127,14 +127,14 @@ export default class DisplayConversations extends Component {
           />
           <>
             {
-                        error
-                        && (
-                        <View style={[GlobalStyle.errorBox, styles.error]}>
-                          <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
-                          <Text style={GlobalStyle.errorText}>{error}</Text>
-                        </View>
-                        )
-                        }
+              error
+              && (
+              <View style={[GlobalStyle.errorBox, styles.error]}>
+                <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
+                <Text style={GlobalStyle.errorText}>{error}</Text>
+              </View>
+              )
+            }
           </>
           <View style={styles.newConversationContainer}>
             <TextInput

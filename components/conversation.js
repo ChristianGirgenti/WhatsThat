@@ -36,7 +36,7 @@ export default class Conversation extends Component {
       userName={`${item.author.first_name} ${item.author.last_name}`}
       message={item.message}
       messageId={item.message_id}
-      user_id={item.author.user_id}
+      userId={item.author.user_id}
       onPress={this.deleteMessage}
       time={new Date(item.timestamp).toLocaleString()}
       navigation={this.navigation}
