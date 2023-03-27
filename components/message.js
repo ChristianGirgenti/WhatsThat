@@ -21,6 +21,18 @@ export default class Message extends Component {
         this.setState({myUserId})
         this.setState({isMyMessage: this.state.myUserId.toString() === this.props.user_id.toString()})
     }
+
+    async componentDidUpdate(prevProps) {
+      if (prevProps.user_id !== this.props.user_id) {
+        const myUserId = await AsyncStorage.getItem("whatsthat_user_id");
+        this.setState({ myUserId });
+        this.setState({
+          isMyMessage:
+            myUserId.toString() === this.props.user_id.toString(),
+        });
+      }
+    }
+
  
     render() {
         return (
@@ -87,3 +99,4 @@ export default class Message extends Component {
             width: '30%'
         }
     })
+
