@@ -5,18 +5,23 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 
 export default class Contact extends Component {
+  constructor(props) {
+    super(props);
+
+    this.name = props.name;
+    this.lastName = props.lastName;
+    this.imageSource = props.imageSource;
+  }
+
   render() {
-    const { name } = this.props;
-    const { lastName } = this.props;
-    const { imageSource } = this.props;
     return (
       <TouchableOpacity>
         <View style={styles.contactContainer}>
-          <Image source={imageSource} style={styles.contactProfileImage} />
+          <Image source={this.imageSource} style={styles.contactProfileImage} />
           <Text style={[GlobalStyle.baseText, styles.contactText]}>
-            {name}
+            {this.name}
             {' '}
-            {lastName}
+            {this.lastName}
           </Text>
         </View>
       </TouchableOpacity>
