@@ -72,6 +72,7 @@ export default class AddNewMembersToChat extends Component {
         headers: { 'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token') },
       },
     )
+      // eslint-disable-next-line consistent-return
       .then(async (response) => {
         if (response.status === 200) return response.blob();
         if (response.status === 401) {

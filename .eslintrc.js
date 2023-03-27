@@ -23,8 +23,6 @@ module.exports = {
     'no-use-before-define': ['error', { variables: false }],
     'no-throw-literal': 0,
     'react/prefer-stateless-function': 0,
-    'consistent-return': 0,
-    'react/jsx-no-useless-fragment': 0,
     'react/no-unstable-nested-components': [
       'off',
       {
