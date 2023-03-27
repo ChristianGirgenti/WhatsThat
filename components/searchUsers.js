@@ -8,13 +8,9 @@ import GlobalStyle from '../styles/GlobalStyle';
 import NavigationHeader from './screenForNavigation/navigationHeader';
 import Contact from './contact';
 import PaginationDropdown from './paginationDropdown';
-// import Pagination from './pagination';
+import Pagination from './pagination';
 
 export default class SearchUsers extends Component {
-  // Currently it is not really possible to do the pagination as if I set limit to 5 ,
-  // the API call will return only 5 contacts,
-  // that means pagination won't be needed.
-
   constructor(props) {
     super(props);
 
@@ -25,15 +21,38 @@ export default class SearchUsers extends Component {
       searchResults: [],
       error: '',
       currentUserId: 0,
-      // currentPage: 1,
+      currentPage: 1,
       pageSize: 20,
-      // totalPages: 0
+      location: '',
+      isLastPage: false,
     };
+
+    this.onPrevPage = this.onPrevPage.bind(this);
+    this.onNextPage = this.onNextPage.bind(this);
     this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
   }
 
   handlePageSizeChange(pageSize) {
     this.setState({ pageSize });
+  }
+
+  async onPrevPage() {
+    const { currentPage } = this.state;
+    if (currentPage > 1) {
+      const { location } = this.state;
+      const { searchTerm } = this.state;
+      await this.search(searchTerm, location, currentPage - 1);
+    }
+  }
+
+  async onNextPage() {
+    const { isLastPage } = this.state;
+    if (!isLastPage) {
+      const { currentPage } = this.state;
+      const { location } = this.state;
+      const { searchTerm } = this.state;
+      await this.search(searchTerm, location, currentPage + 1);
+    }
   }
 
   async getContactPhoto(userId) {
@@ -92,9 +111,11 @@ export default class SearchUsers extends Component {
       });
   }
 
-  async search(searchTerm, location) {
+  async search(searchTerm, location, currentPage) {
     this.clearErrorMessages();
     const { pageSize } = this.state;
+    this.setState({ location });
+    this.setState({ isLastPage: false });
     this.state.currentUserId = await AsyncStorage.getItem('whatsthat_user_id');
     if (searchTerm === '') {
       this.setState({ searchTerm: '' });
@@ -102,10 +123,8 @@ export default class SearchUsers extends Component {
       return;
     }
     this.setState({ searchTerm });
-
-    // With pagination: fetch("http://localhost:3333/api/1.0.0/search?q="+searchTerm+"&search_in="+location+"&limit="+this.state.pageSize+"&offset="+(this.state.currentPage-1)*this.state.pageSize
     return fetch(
-      `http://localhost:3333/api/1.0.0/search?q=${searchTerm}&search_in=${location}&limit=${pageSize}`,
+      `http://localhost:3333/api/1.0.0/search?q=${searchTerm}&search_in=${location}&limit=${pageSize}&offset=${(currentPage - 1) * pageSize}`,
       {
         method: 'GET',
         headers: { 'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token') },
@@ -127,11 +146,12 @@ export default class SearchUsers extends Component {
             const photo = await this.getContactPhoto(item.user_id);
             return { ...item, photo };
           }));
-
           this.setState({ searchResults: updatedResponseJson });
-          // this.setState({totalPages: Math.ceil(updatedResponseJson.length/this.state.pageSize)})
-          // console.log(this.state.totalPages)
-          console.log(updatedResponseJson);
+          this.setState({ currentPage });
+
+          if (updatedResponseJson.length < pageSize) {
+            this.setState({ isLastPage: true });
+          }
         } else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
@@ -167,17 +187,11 @@ export default class SearchUsers extends Component {
     }
   };
 
-  // handlePageChange(){
-  //     console.log("HI")
-  //     this.setState({ currentPage: page });
-  //     const offset = (page - 1) * this.state.pageSize;
-  //     this.search(this.state.searchTerm, "all", this.state.pageSize, offset);
-  //   };
-
   render() {
     const { searchTerm } = this.state;
     const { error } = this.state;
     const { searchResults } = this.state;
+    const { currentPage } = this.state;
 
     return (
       <View style={GlobalStyle.mainContainer}>
@@ -191,11 +205,21 @@ export default class SearchUsers extends Component {
           />
           <PaginationDropdown onValueChange={this.handlePageSizeChange} />
           <View style={styles.groupSearchButton}>
-            <TouchableOpacity style={styles.searchButton} onPress={() => this.search(searchTerm, 'all')}>
+            <TouchableOpacity
+              style={styles.searchButton}
+              onPress={() => {
+                this.search(searchTerm, 'all', 1);
+              }}
+            >
               <Icon name="search-web" color="green" size={40} />
               <Text>Search All</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.searchButton} onPress={() => this.search(searchTerm, 'contacts')}>
+            <TouchableOpacity
+              style={styles.searchButton}
+              onPress={() => {
+                this.search(searchTerm, 'contacts', 1);
+              }}
+            >
               <Icon name="account-search" color="green" size={40} />
               <Text>Search Contacts</Text>
             </TouchableOpacity>
@@ -220,11 +244,11 @@ export default class SearchUsers extends Component {
               renderItem={this.renderItem}
               keyExtractor={(item, index) => index.toString()}
             />
-            {/* <Pagination
-                        currentPage={this.state.currentPage}
-                        totalPages={this.state.totalPages}
-                        onPageChange={this.handlePageChange}
-                    /> */}
+            <Pagination
+              currentPage={currentPage}
+              onPrevPage={this.onPrevPage}
+              onNextPage={this.onNextPage}
+            />
           </View>
 
         </View>
