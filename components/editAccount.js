@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as EmailValidator from 'email-validator';
 import GlobalStyle from '../styles/GlobalStyle';
 import NavigationHeaderWithIcon from './screenForNavigation/navigationHeaderWithIcon';
 
@@ -97,6 +98,23 @@ export default class EditAccount extends Component {
       });
   }
 
+  validateInputForms() {
+    const { name } = this.state;
+    const { lastName } = this.state;
+    const { newEmail } = this.state;
+
+    if (!(newEmail && name && lastName)) {
+      this.setState({ error: 'All fields must be filled' });
+      return false;
+    }
+
+    if (!(EmailValidator.validate(newEmail))) {
+      this.setState({ error: 'The email is not valid' });
+      return false;
+    }
+    return true;
+  }
+
   async saveChanges() {
     this.clearErrorMessages();
     let toSend = {};
@@ -107,13 +125,17 @@ export default class EditAccount extends Component {
     const { newEmail } = this.state;
     const { emailStored } = this.state;
 
+    if (!this.validateInputForms()) return;
+
     if (name !== nameStored) { toSend = { ...toSend, first_name: name }; }
     if (lastName !== lastNameStored) { toSend = { ...toSend, last_name: lastName }; }
     if (newEmail !== emailStored) { toSend = { ...toSend, email: newEmail }; }
+
     if (Object.keys(toSend).length === 0) {
       this.setState({ error: 'Nothing to update!' });
       return;
     }
+
     const userId = await AsyncStorage.getItem('whatsthat_user_id');
     return fetch(
       `http://localhost:3333/api/1.0.0/user/${userId}`,
