@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 
 // HAD TO ADD THE LINE ABOVE OTHERWISE THE ADD MEMBER WINDOWS WAS RETURNING WARNINGS.
-// HAD TO DISABLE THE THROW LITERAL BECASUE IT WAS ERRORING IF RETURNING NEW ERROR(" .... ")
 // HAD TO ADD DISABLE NO USE BEFORE DEFINED BECAUSE WAS ISSUING WITH THE CONST STYLE
 
 import React, { Component } from 'react';
@@ -55,10 +54,10 @@ export default class AddNewMembersToChat extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -79,21 +78,19 @@ export default class AddNewMembersToChat extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((resBlob) => {
         const data = URL.createObjectURL(resBlob);
         return data;
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
   async addNewMember(chatId, userId) {
     this.clearErrorMessages();
-    console.log(chatId)
-    console.log(userId)
     return fetch(
       `http://localhost:3333/api/1.0.0/chat/${chatId}/user/${userId}`,
       {
@@ -124,11 +121,11 @@ export default class AddNewMembersToChat extends Component {
         // When logged in with User B, User A will appear in User B contact list,
         // however, if User B tries to add User A to the chat,
         // will look like User A is not part of the User B contact list so will return the 400.
-        else if (response.status === 400) throw 'This user is already part of the chat or is not in your contact';
-        else throw 'Something went wrong while retrieving your data';
+        else if (response.status === 400) throw new Error('This user is already part of the chat or is not in your contact');
+        else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 

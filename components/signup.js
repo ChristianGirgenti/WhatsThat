@@ -79,10 +79,14 @@ export default class SignUpScreen extends Component {
         if (response.status === 201) {
           this.setState({ submitted: false });
           this.navigation.navigate('Login');
-        } else if (response.status === 400) { throw 'Email already exists'; } else { throw 'Something went wrong while creating the account. Please try again'; }
+        } else if (response.status === 400) {
+          throw new Error('Email already exists');
+        } else {
+          throw new Error('Something went wrong while creating the account. Please try again');
+        }
       })
       .catch((error) => {
-        this.setState({ genericErr: error });
+        this.setState({ genericErr: error.message });
         this.setState({ submitted: false });
       });
   }

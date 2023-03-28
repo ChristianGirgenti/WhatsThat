@@ -46,14 +46,14 @@ export default class UpdateChatInformation extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((resBlob) => {
         const data = URL.createObjectURL(resBlob);
         return data;
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -140,18 +140,18 @@ export default class UpdateChatInformation extends Component {
         if (response.status === 200) {
           console.log('Updated');
           this.navigation.navigate('DisplayConversations');
-        } else if (response.status === 400) throw 'Bad Request';
+        } else if (response.status === 400) throw new Error('Bad Request');
         else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 403) throw 'Can not update the chat title!';
-        else if (response.status === 404) throw 'Chat not found!!';
-        else throw 'Something went wrong while trying to log in';
+        } else if (response.status === 403) throw new Error('Can not update the chat title!');
+        else if (response.status === 404) throw new Error('Chat not found!!');
+        else throw new Error('Something went wrong while trying to log in');
       })
       .catch((thisError) => {
-        this.setState({ errorInputForm: thisError.toString() });
+        this.setState({ errorInputForm: thisError.message });
       });
   }
 
@@ -182,12 +182,12 @@ export default class UpdateChatInformation extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 403) throw 'Cannot remove this member from the chat';
-        else if (response.status === 404) throw 'Member not found!';
-        else throw 'Something went wrong while retrieving your data';
+        } else if (response.status === 403) throw new Error('Cannot remove this member from the chat');
+        else if (response.status === 404) throw new Error('Member not found!');
+        else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 

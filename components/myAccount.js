@@ -48,7 +48,7 @@ export default class MyAccount extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((resBlob) => {
         const data = URL.createObjectURL(resBlob);
@@ -59,7 +59,7 @@ export default class MyAccount extends Component {
         });
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -81,7 +81,7 @@ export default class MyAccount extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((responseJson) => {
         this.setState({
@@ -92,7 +92,7 @@ export default class MyAccount extends Component {
         });
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -115,10 +115,10 @@ export default class MyAccount extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong';
+        } else throw new Error('Something went wrong');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 

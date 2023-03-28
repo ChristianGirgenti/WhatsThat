@@ -77,8 +77,8 @@ export default class LogInScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) return response.json();
-        if (response.status === 400) throw 'Invalid email or password supplied';
-        else throw 'Something went wrong while trying to log in';
+        if (response.status === 400) throw new Error('Invalid email or password supplied');
+        else throw new Error('Something went wrong while trying to log in');
       })
       .then(async (rJson) => {
         try {
@@ -86,11 +86,11 @@ export default class LogInScreen extends Component {
           await AsyncStorage.setItem('whatsthat_session_token', rJson.token);
           this.navigation.navigate('Home');
         } catch {
-          throw 'Something went wrong while trying to log in';
+          throw new Error('Something went wrong while trying to log in');
         }
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 

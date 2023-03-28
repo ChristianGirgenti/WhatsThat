@@ -69,12 +69,12 @@ export default class Conversation extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 404) throw 'Message not found!';
-        else if (response.status === 400) throw "You can't delete this message";
-        else throw 'Something went wrong while retrieving your data';
+        } else if (response.status === 404) throw new Error('Message not found!');
+        else if (response.status === 400) throw new Error('You can not delete this message');
+        else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -108,11 +108,11 @@ export default class Conversation extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 400) throw "You can't create the new chat";
-        else throw 'Something went wrong while creating the new chat';
+        } else if (response.status === 400) throw new Error('You can not create the new chat');
+        else throw new Error('Something went wrong while creating the new chat');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -136,14 +136,14 @@ export default class Conversation extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 403) throw 'Cannot access this chat';
+        } else if (response.status === 403) throw new Error('Can not access this chat');
         else if (response.status === 404) {
           console.log('Chat not found');
           this.navigation.navigate('DisplayConversation');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 

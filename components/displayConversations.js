@@ -47,10 +47,10 @@ export default class DisplayConversations extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -87,11 +87,11 @@ export default class DisplayConversations extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 400) throw "You can't create the new chat";
-        else throw 'Something went wrong while creating the new chat';
+        } else if (response.status === 400) throw new Error('You can not create the new chat');
+        else throw new Error('Something went wrong while creating the new chat');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 

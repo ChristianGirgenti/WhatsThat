@@ -48,10 +48,10 @@ export default class DisplayContacts extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -72,14 +72,14 @@ export default class DisplayContacts extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((resBlob) => {
         const data = URL.createObjectURL(resBlob);
         return data;
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -103,12 +103,12 @@ export default class DisplayContacts extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 404) throw 'User not found!';
-        else if (response.status === 400) throw "You can't block yourself";
-        else throw 'Something went wrong while trying to block the account';
+        } else if (response.status === 404) throw new Error('User not found!');
+        else if (response.status === 400) throw new Error('You can not block yourself');
+        else throw new Error('Something went wrong while trying to block the account');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -133,12 +133,12 @@ export default class DisplayContacts extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 404) throw 'User not found!';
-        else if (response.status === 400) throw "You can't remove yourself as a contact";
-        else throw 'Something went wrong while retrieving your data';
+        } else if (response.status === 404) throw new Error('User not found!');
+        else if (response.status === 400) throw new Error('You can not remove yourself as a contact');
+        else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 

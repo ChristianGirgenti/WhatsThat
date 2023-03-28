@@ -71,14 +71,14 @@ export default class SearchUsers extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((resBlob) => {
         const data = URL.createObjectURL(resBlob);
         return data;
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -102,12 +102,12 @@ export default class SearchUsers extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 404) throw 'User not found!';
-        else if (response.status === 400) throw "You can't add yourself as a contact";
-        else throw 'Something went wrong while retrieving your data';
+        } else if (response.status === 404) throw new Error('User not found!');
+        else if (response.status === 400) throw new Error('You can not add yourself as a contact');
+        else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -150,10 +150,10 @@ export default class SearchUsers extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 

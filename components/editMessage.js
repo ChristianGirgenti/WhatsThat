@@ -56,18 +56,18 @@ export default class EditMessage extends Component {
         if (response.status === 200) {
           console.log('Updated');
           this.navigation.goBack();
-        } else if (response.status === 400) throw 'Bad Request';
+        } else if (response.status === 400) throw new Error('Bad Request');
         else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 403) throw 'Can not update the message!';
-        else if (response.status === 404) throw 'Message not found!!';
-        else throw 'Something went wrong while trying to log in';
+        } else if (response.status === 403) throw new Error('Can not update the message!');
+        else if (response.status === 404) throw new Error('Message not found!!');
+        else throw new Error('Something went wrong while trying to log in');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 

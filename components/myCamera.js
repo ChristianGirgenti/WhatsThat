@@ -53,11 +53,11 @@ export default function MyCamera() {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           navigation.navigate('Login');
-        } else if (response.status === 403) throw 'You cannot change this photo!';
-        else throw 'Something went wrong while retrieving your data';
+        } else if (response.status === 403) throw new Error('You cannot change this photo!');
+        else throw new Error('Something went wrong while retrieving your data');
       })
       .catch((thisError) => {
-        handleError(thisError);
+        handleError(thisError.message);
       });
   }
 

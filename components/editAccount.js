@@ -50,7 +50,7 @@ export default class EditAccount extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((resBlob) => {
         const data = URL.createObjectURL(resBlob);
@@ -59,7 +59,7 @@ export default class EditAccount extends Component {
         });
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -80,7 +80,7 @@ export default class EditAccount extends Component {
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else throw 'Something went wrong while retrieving your data';
+        } else throw new Error('Something went wrong while retrieving your data');
       })
       .then((responseJson) => {
         this.setState({
@@ -93,7 +93,7 @@ export default class EditAccount extends Component {
         });
       })
       .catch((thisError) => {
-        this.setState({ error: thisError });
+        this.setState({ error: thisError.message });
       });
   }
 
@@ -130,17 +130,17 @@ export default class EditAccount extends Component {
         if (response.status === 200) {
           console.log('Updated');
           this.navigation.navigate('MyAccount');
-        } else if (response.status === 400) throw 'Bad Request';
+        } else if (response.status === 400) throw new Error('Bad Request');
         else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
           await AsyncStorage.removeItem('whatsthat_user_id');
           this.navigation.navigate('Login');
-        } else if (response.status === 403 || response.status === 404) throw 'Can not update the information!';
-        else throw 'Something went wrong while trying to log in';
+        } else if (response.status === 403 || response.status === 404) throw new Error('Can not update the information!');
+        else throw new Error('Something went wrong while trying to log in');
       })
       .catch((thisError) => {
-        this.setState({ error: thisError.toString() });
+        this.setState({ error: thisError.message });
       });
   }
 
