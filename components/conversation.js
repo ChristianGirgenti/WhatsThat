@@ -130,7 +130,7 @@ export default class Conversation extends Component {
           const responseJson = await response.json();
           this.setState({ conversation: responseJson });
           const { conversation } = this.state;
-          this.setState({ messages: conversation.messages.slice().reverse() });
+          this.setState({ messages: conversation.messages });
         } else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
@@ -173,6 +173,7 @@ export default class Conversation extends Component {
             data={messages}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => index.toString()}
+            inverted
           />
         </View>
         <>
