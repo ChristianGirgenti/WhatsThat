@@ -18,6 +18,7 @@ export default class EditAccount extends Component {
       name: '',
       lastName: '',
       newEmail: '',
+      newPassword: '',
       error: '',
       nameStored: '',
       lastNameStored: '',
@@ -102,15 +103,27 @@ export default class EditAccount extends Component {
     const { name } = this.state;
     const { lastName } = this.state;
     const { newEmail } = this.state;
+    const { newPassword } = this.state;
+    const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,30}$/;
 
     if (!(newEmail && name && lastName)) {
-      this.setState({ error: 'All fields must be filled' });
+      this.setState({ error: 'The name, last name and email fields cannot be empty' });
       return false;
     }
 
     if (!(EmailValidator.validate(newEmail))) {
       this.setState({ error: 'The email is not valid' });
       return false;
+    }
+    if (newPassword) {
+      if (!PASSWORD_REGEX.test(newPassword)) {
+        if (newPassword.length < 8 || newPassword.length > 30) {
+          this.setState({ error: 'Invalid password length.\nThe password must have a minimum of 8 characters and a maximum of 30.' });
+        } else {
+          this.setState({ error: 'Invalid password.\nThe password must have an uppercase letter, a lowercase letter, a special character and a number.' });
+        }
+        return false;
+      }
     }
     return true;
   }
@@ -124,12 +137,14 @@ export default class EditAccount extends Component {
     const { lastNameStored } = this.state;
     const { newEmail } = this.state;
     const { emailStored } = this.state;
+    const { newPassword } = this.state;
 
     if (!this.validateInputForms()) return;
 
     if (name !== nameStored) { toSend = { ...toSend, first_name: name }; }
     if (lastName !== lastNameStored) { toSend = { ...toSend, last_name: lastName }; }
     if (newEmail !== emailStored) { toSend = { ...toSend, email: newEmail }; }
+    if (newPassword) { toSend = { ...toSend, password: newPassword }; }
 
     if (Object.keys(toSend).length === 0) {
       this.setState({ error: 'Nothing to update!' });
@@ -181,6 +196,7 @@ export default class EditAccount extends Component {
     const { lastName } = this.state;
     const { newEmail } = this.state;
     const { error } = this.state;
+    const { newPassword } = this.state;
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeaderWithIcon navigation={this.navigation} title="Edit Account" />
@@ -196,23 +212,41 @@ export default class EditAccount extends Component {
           <TouchableOpacity style={GlobalStyle.button} onPress={() => this.updatePhoto()}>
             <Text style={GlobalStyle.buttonText}>Change Photo</Text>
           </TouchableOpacity>
-
-          <TextInput
-            style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
-            value={name}
-            onChangeText={(newName) => this.setState({ name: newName })}
-          />
-          <TextInput
-            style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
-            value={lastName}
-            onChangeText={(newLastName) => this.setState({ lastName: newLastName })}
-          />
-          <TextInput
-            style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
-            value={newEmail}
-            onChangeText={(email) => this.setState({ newEmail: email })}
-          />
-
+          <View>
+            <View style={styles.formGroup}>
+              <Text style={styles.labelText}>Name: </Text>
+              <TextInput
+                style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
+                value={name}
+                onChangeText={(newName) => this.setState({ name: newName })}
+              />
+            </View>
+            <View style={styles.formGroup}>
+              <Text style={styles.labelText}>Last Name: </Text>
+              <TextInput
+                style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
+                value={lastName}
+                onChangeText={(newLastName) => this.setState({ lastName: newLastName })}
+              />
+            </View>
+            <View style={styles.formGroup}>
+              <Text style={styles.labelText}>Email: </Text>
+              <TextInput
+                style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
+                value={newEmail}
+                onChangeText={(email) => this.setState({ newEmail: email })}
+              />
+            </View>
+            <View style={styles.formGroup}>
+              <Text style={styles.labelText}>Password: </Text>
+              <TextInput
+                style={[GlobalStyle.baseText, GlobalStyle.textInputBox]}
+                value={newPassword}
+                onChangeText={(password) => this.setState({ newPassword: password })}
+                secureTextEntry
+              />
+            </View>
+          </View>
           <TouchableOpacity style={GlobalStyle.button} onPress={() => this.saveChanges()}>
             <Text style={GlobalStyle.buttonText}>Save</Text>
           </TouchableOpacity>
@@ -238,5 +272,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 15,
+  },
+  formGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  labelText: {
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });

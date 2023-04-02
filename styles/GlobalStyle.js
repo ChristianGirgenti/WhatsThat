@@ -1,53 +1,54 @@
-import { StyleSheet} from 'react-native';
-export default StyleSheet.create({
- mainContainer:{
-   flex: 1,
-   width: "100%",
-   backgroundColor: '#e1e1e1',
- },
+import { StyleSheet } from 'react-native';
 
- textInputBox:{
+export default StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#e1e1e1',
+  },
+
+  textInputBox: {
     backgroundColor: 'white',
     padding: 10,
     marginVertical: 15,
     borderRadius: 4,
-    width:'74%'
-},
+    width: '74%',
+  },
 
- baseText: {
+  baseText: {
     fontSize: 18,
-    fontWeight: 'normal'
- },
+    fontWeight: 'normal',
+  },
 
- titleText: {
-   fontSize: 24,
-   fontWeight: 'bold',
-   color: '#fff'
- },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
 
- button: {
+  button: {
     padding: 5,
     backgroundColor: 'red',
-    borderRadius: 4, 
+    borderRadius: 4,
     alignSelf: 'center',
     marginTop: 20,
-    width: '37%'
- },
+    width: '37%',
+  },
 
- buttonText: {
+  buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
-    alignSelf: 'center'
- },
-
- errorText: {
-    color: '#ed1c5c',
-    fontSize: 16,
-    fontWeight: 'normal'
+    alignSelf: 'center',
   },
 
- errorBox:{
+  errorText: {
+    color: '#ed1c5c',
+    fontSize: 16,
+    fontWeight: 'normal',
+  },
+
+  errorBox: {
     flexDirection: 'row',
     borderLeftColor: '#ed1c5c',
     borderColor: '#ffedf3',
@@ -57,17 +58,17 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
     width: '74%',
-    padding: 10
+    padding: 10,
   },
   errorIcon: {
     marginRight: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
-  navigationHeaderTitle:{
+  navigationHeaderTitle: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 24,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   navigationHeaderSection: {
     backgroundColor: '#25D366',
@@ -79,6 +80,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   wrapper: {
-    flex:15
-  }
+    flex: 15,
+  },
 });
