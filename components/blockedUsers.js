@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Text, StyleSheet, TouchableOpacity, View, FlatList,
+  Text, StyleSheet, TouchableOpacity, View, FlatList, ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ export default class BlockedUsers extends Component {
     this.state = {
       blockedUsers: [],
       error: '',
+      isLoading: true,
     };
   }
 
@@ -71,6 +72,7 @@ export default class BlockedUsers extends Component {
             return { ...item, photo };
           }));
           this.setState({ blockedUsers: updatedResponseJson });
+          this.setState({ isLoading: false });
         } else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
@@ -116,29 +118,35 @@ export default class BlockedUsers extends Component {
     this.setState({ error: '' });
   }
 
-  renderItem = ({ item }) => {
-    console.log(item);
-    return (
-      <View style={styles.contactViewContainer}>
-        <Contact
-          name={item.first_name}
-          lastName={item.last_name}
-          imageSource={item.photo}
-          style={styles.contact}
-        />
-        <TouchableOpacity
-          style={styles.unblockButton}
-          onPress={() => this.unblockContact(item.user_id)}
-        >
-          <Icon name="account-lock-open-outline" color="green" size={40} />
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  renderItem = ({ item }) => (
+    <View style={styles.contactViewContainer}>
+      <Contact
+        name={item.first_name}
+        lastName={item.last_name}
+        imageSource={item.photo}
+        style={styles.contact}
+      />
+      <TouchableOpacity
+        style={styles.unblockButton}
+        onPress={() => this.unblockContact(item.user_id)}
+      >
+        <Icon name="account-lock-open-outline" color="green" size={40} />
+      </TouchableOpacity>
+    </View>
+  );
 
   render() {
     const { error } = this.state;
     const { blockedUsers } = this.state;
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeaderWithIcon navigation={this.navigation} title="Blocked Users" />

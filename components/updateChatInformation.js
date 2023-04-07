@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, TouchableOpacity, Text, StyleSheet, TextInput, FlatList,
+  View, TouchableOpacity, Text, StyleSheet, TextInput, FlatList, ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +20,7 @@ export default class UpdateChatInformation extends Component {
       newTitle: '',
       chatMembers: [],
       errorInputForm: '',
+      isLoading: true,
     };
   }
 
@@ -74,6 +75,7 @@ export default class UpdateChatInformation extends Component {
             return { ...item, photo };
           }));
           this.setState({ chatMembers: updatedResponseJson });
+          this.setState({ isLoading: false });
         } else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
@@ -214,6 +216,15 @@ export default class UpdateChatInformation extends Component {
     const { newTitle } = this.state;
     const { error } = this.state;
     const { chatMembers } = this.state;
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeaderWithIcon navigation={this.navigation} title="Update Chat Information" />

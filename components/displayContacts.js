@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, FlatList, StyleSheet, TouchableOpacity, Text,
+  View, FlatList, StyleSheet, TouchableOpacity, Text, ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ export default class DisplayContacts extends Component {
     this.state = {
       contacts: [],
       error: '',
+      isLoading: true,
     };
   }
 
@@ -43,6 +44,7 @@ export default class DisplayContacts extends Component {
             return { ...item, photo };
           }));
           this.setState({ contacts: updatedResponseJson });
+          this.setState({ isLoading: false });
         } else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
@@ -171,6 +173,15 @@ export default class DisplayContacts extends Component {
   render() {
     const { error } = this.state;
     const { contacts } = this.state;
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeader title="My Contacts" />

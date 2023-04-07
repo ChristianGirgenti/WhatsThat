@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity, TextInput, Image,
+  View, StyleSheet, Text, TouchableOpacity, TextInput, Image, ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,6 +24,7 @@ export default class EditAccount extends Component {
       lastNameStored: '',
       emailStored: '',
       photo: null,
+      isLoading: true,
     };
   }
 
@@ -92,6 +93,7 @@ export default class EditAccount extends Component {
           lastNameStored: responseJson.last_name,
           newEmail: responseJson.email,
           emailStored: responseJson.email,
+          isLoading: false,
         });
       })
       .catch((thisError) => {
@@ -197,6 +199,15 @@ export default class EditAccount extends Component {
     const { newEmail } = this.state;
     const { error } = this.state;
     const { newPassword } = this.state;
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeaderWithIcon navigation={this.navigation} title="Edit Account" />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Text, StyleSheet, TouchableOpacity, View, TextInput, FlatList,
+  Text, StyleSheet, TouchableOpacity, View, TextInput, FlatList, ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,6 +25,7 @@ export default class SearchUsers extends Component {
       pageSize: 20,
       location: '',
       isLastPage: false,
+      isLoading: true,
     };
 
     this.onPrevPage = this.onPrevPage.bind(this);
@@ -141,6 +142,7 @@ export default class SearchUsers extends Component {
           }));
           this.setState({ searchResults: updatedResponseJson });
           this.setState({ currentPage });
+          this.setState({ isLoading: false });
 
           if (updatedResponseJson.length < pageSize) {
             this.setState({ isLastPage: true });
@@ -162,6 +164,15 @@ export default class SearchUsers extends Component {
   }
 
   renderItem = ({ item }) => {
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     const { currentUserId } = this.state;
     if (item.user_id !== currentUserId) {
       return (
