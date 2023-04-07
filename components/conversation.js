@@ -78,6 +78,23 @@ export default class Conversation extends Component {
       });
   }
 
+  async saveDraft() {
+    const { thisMessage } = this.state;
+    if (thisMessage === '') {
+      return;
+    }
+    const draftMessages = await AsyncStorage.getItem('draftMessages');
+    if (draftMessages == null) {
+      const newDraftMessages = [thisMessage];
+      await AsyncStorage.setItem('draftMessages', JSON.stringify(newDraftMessages));
+    } else {
+      const existingDraftMessages = JSON.parse(draftMessages);
+      existingDraftMessages.push(thisMessage);
+      await AsyncStorage.setItem('draftMessages', JSON.stringify(existingDraftMessages));
+    }
+    this.setState({ thisMessage: '' });
+  }
+
   async send(chatId) {
     const { thisMessage } = this.state;
     this.clearErrorMessages();
@@ -147,10 +164,16 @@ export default class Conversation extends Component {
       });
   }
 
-  updateTitle(chatId, conversationTitle) {
+  updateChatInformation(chatId, conversationTitle) {
     this.navigation.navigate('UpdateChatInformation', {
       chatId,
       conversationTitle,
+    });
+  }
+
+  goToDraft(chatId) {
+    this.navigation.navigate('Drafts', {
+      chatId,
     });
   }
 
@@ -163,7 +186,10 @@ export default class Conversation extends Component {
       <View style={GlobalStyle.mainContainer}>
         <View style={styles.titleSection}>
           <NavigationHeaderWithIcon navigation={this.navigation} title={conversationTitle} />
-          <TouchableOpacity onPress={() => this.updateTitle(chatId, conversationTitle)}>
+          <TouchableOpacity onPress={() => this.goToDraft(chatId)}>
+            <Icon name="email-open" color="black" size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.updateChatInformation(chatId, conversationTitle)}>
             <Icon name="note-edit-outline" color="black" size={30} />
           </TouchableOpacity>
         </View>
@@ -178,14 +204,14 @@ export default class Conversation extends Component {
         </View>
         <>
           {
-                        error
-                        && (
-                        <View style={[GlobalStyle.errorBox, styles.error]}>
-                          <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
-                          <Text style={GlobalStyle.errorText}>{error}</Text>
-                        </View>
-                        )
-                        }
+            error
+            && (
+            <View style={[GlobalStyle.errorBox, styles.error]}>
+              <Icon name="alert-box-outline" size={20} color="red" style={GlobalStyle.errorIcon} />
+              <Text style={GlobalStyle.errorText}>{error}</Text>
+            </View>
+            )
+          }
         </>
         <View style={styles.sendMessageContainer}>
           <TextInput
@@ -193,12 +219,14 @@ export default class Conversation extends Component {
             style={styles.messageBox}
             placeholder="Message"
             onChangeText={(thisMessage) => this.setState({ thisMessage })}
-            // eslint-disable-next-line react/destructuring-assignment
             value={this.state.thisMessage}
             maxLength={70}
           />
           <TouchableOpacity onPress={() => this.send(chatId)}>
             <Icon name="send" color="black" size={40} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.saveDraft()}>
+            <Icon name="content-save" color="black" size={40} />
           </TouchableOpacity>
         </View>
       </View>

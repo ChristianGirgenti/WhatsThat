@@ -139,7 +139,6 @@ export default class DisplayConversations extends Component {
           <View style={styles.newConversationContainer}>
             <TextInput
               style={styles.conversationTitleContainer}
-              // eslint-disable-next-line react/destructuring-assignment
               value={this.state.newConversationTitle}
               onChangeText={(newConversationTitle) => this.setState({ newConversationTitle })}
               placeholder="Conversation Title..."

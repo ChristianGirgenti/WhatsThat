@@ -30,5 +30,6 @@ module.exports = {
         allowAsProps: true,
       },
     ],
+    'react/destructuring-assignment': 0,
   },
 };
