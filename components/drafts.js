@@ -13,7 +13,7 @@ export default class Drafts extends Component {
     super(props);
 
     this.navigation = props.navigation;
-    // this.route = props.route;
+    this.route = props.route;
 
     this.state = {
       draftMessages: [],
@@ -29,6 +29,38 @@ export default class Drafts extends Component {
     this.navigation.addListener('focus', () => {
       this.showDrafts();
     });
+  }
+
+  async send(chatId, draft) {
+    this.clearErrorMessages();
+    const toSend = {
+      message: draft,
+    };
+    return fetch(
+      `http://localhost:3333/api/1.0.0/chat/${chatId}/message`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token'),
+        },
+        body: JSON.stringify(toSend),
+      },
+    )
+      .then(async (response) => {
+        if (response.status === 200) {
+          this.navigation.goBack();
+        } else if (response.status === 401) {
+          console.log('Unauthorised');
+          await AsyncStorage.removeItem('whatsthat_session_token');
+          await AsyncStorage.removeItem('whatsthat_user_id');
+          this.navigation.navigate('Login');
+        } else if (response.status === 400) throw new Error('You can not create the new chat');
+        else throw new Error('Something went wrong while creating the new chat');
+      })
+      .catch((thisError) => {
+        this.setState({ error: thisError.message });
+      });
   }
 
   async deleteDraft(item) {
@@ -98,6 +130,7 @@ export default class Drafts extends Component {
       message={item}
       onDelete={() => this.deleteDraft(item)}
       onEdit={() => this.editDraft(item)}
+      onSend={() => this.send(this.route.params.chatId, item)}
     />
   );
 

@@ -9,12 +9,13 @@ export default class DraftMessage extends Component {
     const { message } = this.props;
     const { onDelete } = this.props;
     const { onEdit } = this.props;
+    const { onSend } = this.props;
     return (
       <View style={styles.draftMessageContainer}>
         <Text style={styles.content}>{message}</Text>
         <View style={styles.groupButton}>
           <TouchableOpacity>
-            <Icon name="send" color="black" size={30} />
+            <Icon name="send" color="black" size={30} onPress={onSend} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Icon name="note-edit-outline" color="black" size={30} onPress={onEdit} />
