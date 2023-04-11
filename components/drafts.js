@@ -121,6 +121,13 @@ export default class Drafts extends Component {
     }
   }
 
+  async schedule(chatId, message) {
+    this.navigation.navigate('Schedule', {
+      chatId,
+      message,
+    });
+  }
+
   clearErrorMessages() {
     this.setState({ error: '' });
   }
@@ -131,6 +138,7 @@ export default class Drafts extends Component {
       onDelete={() => this.deleteDraft(item)}
       onEdit={() => this.editDraft(item)}
       onSend={() => this.send(this.route.params.chatId, item)}
+      onSchedule={() => this.schedule(this.route.params.chatId, item)}
     />
   );
 

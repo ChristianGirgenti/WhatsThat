@@ -6,6 +6,7 @@ import UpdateChatInformation from '../updateChatInformation';
 import AddNewMembersToChat from '../addNewMembersToChat';
 import EditMessage from '../editMessage';
 import Drafts from '../drafts';
+import Schedule from '../schedule';
 
 export default class ConversationScreen extends Component {
   render() {
@@ -19,6 +20,7 @@ export default class ConversationScreen extends Component {
         <Stack.Screen name="AddNewMembersToChat" component={AddNewMembersToChat} options={{ headerShown: false }} />
         <Stack.Screen name="EditMessage" component={EditMessage} options={{ headerShown: false }} />
         <Stack.Screen name="Drafts" component={Drafts} options={{ headerShown: false }} />
+        <Stack.Screen name="Schedule" component={Schedule} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
   }

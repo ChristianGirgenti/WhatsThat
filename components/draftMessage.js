@@ -10,10 +10,14 @@ export default class DraftMessage extends Component {
     const { onDelete } = this.props;
     const { onEdit } = this.props;
     const { onSend } = this.props;
+    const { onSchedule } = this.props;
     return (
       <View style={styles.draftMessageContainer}>
         <Text style={styles.content}>{message}</Text>
         <View style={styles.groupButton}>
+          <TouchableOpacity>
+            <Icon name="clock-outline" color="black" size={30} onPress={onSchedule} />
+          </TouchableOpacity>
           <TouchableOpacity>
             <Icon name="send" color="black" size={30} onPress={onSend} />
           </TouchableOpacity>
