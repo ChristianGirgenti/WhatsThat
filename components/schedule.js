@@ -21,8 +21,8 @@ export default class Schedule extends Component {
   }
 
   validateDateAndTime() {
-    const regexDate = /^\d{4}-\d{2}-\d{2}$/;
-    const regexTime = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+    const regexDate = /^(0?[1-9]|[1-2][0-9]|3[0-1])-(0?[1-9]|1[0-2])-\d{4}$/;
+    const regexTime = /^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/;
 
     if (!regexDate.test(this.state.date)) {
       return false;
@@ -37,64 +37,35 @@ export default class Schedule extends Component {
     this.setState({ error: '' });
   }
 
-  async send(chatId, draft) {
-    const now = new Date();
-    // Create a new Date object with no arguments to represent the current time
-    const hours = now.getHours(); // Get the current hour (0-23)
-    const minutes = now.getMinutes(); // Get the current minute (0-59)
-    const seconds = now.getSeconds(); // Get the current second (0-59)
-    console.log(`The current time is ${hours}:${minutes}:${seconds}`); // Output: "The current time is 14:30:45" (for example)
-    this.clearErrorMessages();
-    const toSend = {
-      message: draft,
-    };
-    return fetch(
-      `http://localhost:3333/api/1.0.0/chat/${chatId}/message`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token'),
-        },
-        body: JSON.stringify(toSend),
-      },
-    )
-      .then(async (response) => {
-        if (response.status === 200) {
-          console.log('Draft Sent');
-        } else if (response.status === 401) {
-          console.log('Unauthorised');
-          await AsyncStorage.removeItem('whatsthat_session_token');
-          await AsyncStorage.removeItem('whatsthat_user_id');
-          this.navigation.navigate('Login');
-        } else if (response.status === 400) throw new Error('You can not create the new chat');
-        else throw new Error('Something went wrong while creating the new chat');
-      })
-      .catch((thisError) => {
-        this.setState({ error: thisError.message });
-      });
-  }
-
-  async schedule() {
-    const now = new Date();
-    // Create a new Date object with no arguments to represent the current time
-    const hours = now.getHours(); // Get the current hour (0-23)
-    const minutes = now.getMinutes(); // Get the current minute (0-59)
-    const seconds = now.getSeconds(); // Get the current second (0-59)
-    console.log(`The current time is ${hours}:${minutes}:${seconds}`); // Output: "The current time is 14:30:45" (for example)
-
+  async schedule(draft) {
     this.clearErrorMessages();
     if (!this.validateDateAndTime()) {
       this.setState({ error: 'Date or Time format are not valid' });
       return;
     }
-    const sendTime = new Date(`${this.state.time} ${this.state.date}`);
-    const currentTime = new Date().getTime();
-    const delay = sendTime - currentTime;
+    const dateString = this.state.date;
+    const timeString = this.state.time;
+
+    const dateTimeFormatted = `${dateString} ${timeString}`;
+
+    const selectedDate = new Date(dateTimeFormatted);
+    const today = new Date();
+
+    if (selectedDate < today) {
+      this.setState({ error: 'This is a messaging app, not a time machine!' });
+      return;
+    }
+
+    const draftObjects = await AsyncStorage.getItem('draftMessages');
+    if (draftObjects !== null) {
+      const drafts = JSON.parse(draftObjects);
+      drafts[draft.index].date = dateTimeFormatted;
+      await AsyncStorage.setItem('draftMessages', JSON.stringify(drafts));
+    }
   }
 
   render() {
-    const { message } = this.route.params;
+    const { draft } = this.route.params;
     const { error } = this.state;
     return (
       <View style={GlobalStyle.mainContainer}>
@@ -102,7 +73,7 @@ export default class Schedule extends Component {
         <View style={GlobalStyle.wrapper}>
           <View style={styles.form}>
             <Text style={[GlobalStyle.baseText, styles.fontBold]}>Draft Message: </Text>
-            <Text style={GlobalStyle.baseText}>{message}</Text>
+            <Text style={GlobalStyle.baseText}>{draft.message}</Text>
           </View>
           <View style={styles.form}>
             <Text style={[GlobalStyle.baseText, styles.fontBold]}>Date: </Text>
@@ -119,8 +90,8 @@ export default class Schedule extends Component {
             />
           </View>
           <View style={styles.form}>
-            <TouchableOpacity style={GlobalStyle.button} onPress={() => this.schedule()}>
-              <Text style={GlobalStyle.buttonText}>Send</Text>
+            <TouchableOpacity style={GlobalStyle.button} onPress={() => this.schedule(draft)}>
+              <Text style={GlobalStyle.buttonText}>Schedule</Text>
             </TouchableOpacity>
           </View>
         </View>

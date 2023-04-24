@@ -95,7 +95,6 @@ export default class Drafts extends Component {
       const draftObjects = await AsyncStorage.getItem('draftMessages');
       if (draftObjects !== null) {
         const drafts = JSON.parse(draftObjects);
-        this.setState({ drafts });
         drafts[draftToEdit.index].message = this.state.thisDraftMessage;
         this.setState({ drafts });
         await AsyncStorage.setItem('draftMessages', JSON.stringify(drafts));
@@ -140,10 +139,9 @@ export default class Drafts extends Component {
     }
   }
 
-  async schedule(chatId, message) {
+  async schedule(draft) {
     this.navigation.navigate('Schedule', {
-      chatId,
-      message,
+      draft,
     });
   }
 
@@ -157,7 +155,7 @@ export default class Drafts extends Component {
       onDelete={() => this.deleteDraft(item)}
       onEdit={() => this.editDraft(item)}
       onSend={() => this.send(item)}
-      onSchedule={() => this.schedule(this.route.params.chatId, item)}
+      onSchedule={() => this.schedule(item)}
     />
   );
 

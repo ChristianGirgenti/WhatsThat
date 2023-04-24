@@ -87,7 +87,7 @@ export default class Conversation extends Component {
     const draftObject = {
       message: thisMessage,
       chatId,
-      data: '14-01-2080',
+      date: '14-01-2080 00:00:00',
     };
     if (draftMessages == null) {
       const newDraftMessages = [draftObject];
