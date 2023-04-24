@@ -47,8 +47,18 @@ export default class Schedule extends Component {
     const timeString = this.state.time;
 
     const dateTimeFormatted = `${dateString} ${timeString}`;
+    const dateParts = dateString.split('-');
+    const timeParts = timeString.split(':');
 
-    const selectedDate = new Date(dateTimeFormatted);
+    const day = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1;
+    const year = parseInt(dateParts[2], 10);
+
+    const hours = parseInt(timeParts[0], 10);
+    const minutes = parseInt(timeParts[1], 10);
+    const seconds = parseInt(timeParts[2], 10);
+
+    const selectedDate = new Date(year, month, day, hours, minutes, seconds);
     const today = new Date();
 
     if (selectedDate < today) {
@@ -62,6 +72,7 @@ export default class Schedule extends Component {
       drafts[draft.index].date = dateTimeFormatted;
       await AsyncStorage.setItem('draftMessages', JSON.stringify(drafts));
     }
+    this.navigation.goBack();
   }
 
   render() {
@@ -76,14 +87,14 @@ export default class Schedule extends Component {
             <Text style={GlobalStyle.baseText}>{draft.message}</Text>
           </View>
           <View style={styles.form}>
-            <Text style={[GlobalStyle.baseText, styles.fontBold]}>Date: </Text>
+            <Text style={[GlobalStyle.baseText, styles.fontBold]}>Date (DD-MM-YYYY): </Text>
             <TextInput
               style={styles.textInput}
               onChangeText={(date) => this.setState({ date })}
             />
           </View>
           <View style={styles.form}>
-            <Text style={[GlobalStyle.baseText, styles.fontBold]}>Time: </Text>
+            <Text style={[GlobalStyle.baseText, styles.fontBold]}>Time (HH:MM:SS): </Text>
             <TextInput
               style={styles.textInput}
               onChangeText={(time) => this.setState({ time })}

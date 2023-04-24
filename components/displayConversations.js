@@ -27,7 +27,90 @@ export default class DisplayConversations extends Component {
       this.setState({ newConversationTitle: '' });
       this.setState({ conversations: [] });
       this.viewAllChats();
+      this.checkForScheduledDrafts();
     });
+  }
+
+  async checkForScheduledDrafts() {
+    const today = new Date();
+    try {
+      const draftObjects = await AsyncStorage.getItem('draftMessages');
+      if (draftObjects !== null) {
+        const drafts = JSON.parse(draftObjects);
+        drafts.forEach((draft) => {
+          const dateTimeParts = draft.date.split(' ');
+
+          const dateParts = dateTimeParts[0].split('-');
+          const timeParts = dateTimeParts[1].split(':');
+
+          const day = parseInt(dateParts[0], 10);
+          const month = parseInt(dateParts[1], 10) - 1;
+          const year = parseInt(dateParts[2], 10);
+
+          const hours = parseInt(timeParts[0], 10);
+          const minutes = parseInt(timeParts[1], 10);
+          const seconds = parseInt(timeParts[2], 10);
+
+          const draftScheduledDate = new Date(year, month, day, hours, minutes, seconds);
+
+          if (draftScheduledDate < today) {
+            this.sendScheduledDrafts(draft);
+          }
+        });
+      }
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  }
+
+  async removeDraftSentFromStorage(draft) {
+    try {
+      const draftObjects = await AsyncStorage.getItem('draftMessages');
+      if (draftObjects !== null) {
+        const drafts = JSON.parse(draftObjects);
+        const index = drafts.findIndex((element) => element.message === draft.message
+        && element.chatId === draft.chatId
+        && element.date === draft.date);
+        drafts.splice(index, 1);
+        await AsyncStorage.setItem('draftMessages', JSON.stringify(drafts));
+      }
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  }
+
+  async sendScheduledDrafts(draft) {
+    this.clearErrorMessages();
+
+    const toSend = {
+      message: draft.message,
+    };
+    return fetch(
+      `http://localhost:3333/api/1.0.0/chat/${draft.chatId}/message`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token'),
+        },
+        body: JSON.stringify(toSend),
+      },
+    )
+      .then(async (response) => {
+        if (response.status === 200) {
+          console.log('Draft sent!');
+          this.removeDraftSentFromStorage(draft);
+        } else if (response.status === 401) {
+          console.log('Unauthorised');
+          await AsyncStorage.removeItem('whatsthat_session_token');
+          await AsyncStorage.removeItem('whatsthat_user_id');
+          this.navigation.navigate('Login');
+        } else if (response.status === 400) throw new Error(`Could not send the draft: ${draft.message}. Please try to send it manually`);
+        else throw new Error('Something went wrong while trying to send a scheduled draft');
+      })
+      .catch((thisError) => {
+        this.setState({ error: thisError.message });
+      });
   }
 
   async viewAllChats() {
