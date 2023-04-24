@@ -78,18 +78,23 @@ export default class Conversation extends Component {
       });
   }
 
-  async saveDraft() {
+  async saveDraft(chatId) {
     const { thisMessage } = this.state;
     if (thisMessage === '') {
       return;
     }
     const draftMessages = await AsyncStorage.getItem('draftMessages');
+    const draftObject = {
+      message: thisMessage,
+      chatId,
+      data: '14-01-2080',
+    };
     if (draftMessages == null) {
-      const newDraftMessages = [thisMessage];
+      const newDraftMessages = [draftObject];
       await AsyncStorage.setItem('draftMessages', JSON.stringify(newDraftMessages));
     } else {
       const existingDraftMessages = JSON.parse(draftMessages);
-      existingDraftMessages.push(thisMessage);
+      existingDraftMessages.push(draftObject);
       await AsyncStorage.setItem('draftMessages', JSON.stringify(existingDraftMessages));
     }
     this.setState({ thisMessage: '' });
@@ -225,7 +230,7 @@ export default class Conversation extends Component {
           <TouchableOpacity onPress={() => this.send(chatId)}>
             <Icon name="send" color="black" size={40} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.saveDraft()}>
+          <TouchableOpacity onPress={() => this.saveDraft(chatId)}>
             <Icon name="content-save" color="black" size={40} />
           </TouchableOpacity>
         </View>

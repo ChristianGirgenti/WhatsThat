@@ -16,10 +16,11 @@ export default class Drafts extends Component {
     this.route = props.route;
 
     this.state = {
-      draftMessages: [],
+      drafts: [],
+      thisChatDrafts: [],
       error: '',
       draftToEdit: '',
-      thisDraft: '',
+      thisDraftMessage: '',
       editable: false,
       saveEditChangesButtonDisabled: true,
     };
@@ -31,13 +32,13 @@ export default class Drafts extends Component {
     });
   }
 
-  async send(chatId, draft) {
+  async send(draft) {
     this.clearErrorMessages();
     const toSend = {
-      message: draft,
+      message: draft.message,
     };
     return fetch(
-      `http://localhost:3333/api/1.0.0/chat/${chatId}/message`,
+      `http://localhost:3333/api/1.0.0/chat/${draft.chatId}/message`,
       {
         method: 'POST',
         headers: {
@@ -66,10 +67,11 @@ export default class Drafts extends Component {
   async deleteDraft(item) {
     this.clearErrorMessages();
     try {
-      const { draftMessages } = this.state;
-      const updatedDraftMessages = draftMessages.filter((message) => message !== item);
-      this.setState({ draftMessages: updatedDraftMessages });
-      await AsyncStorage.setItem('draftMessages', JSON.stringify(updatedDraftMessages));
+      const { drafts } = this.state;
+      const updatedDrafts = drafts.splice(item.index, 1);
+      this.setState({ drafts: updatedDrafts });
+      await AsyncStorage.setItem('draftMessages', JSON.stringify(drafts));
+      this.showDrafts();
     } catch (error) {
       this.setState({ error: error.message });
     }
@@ -79,7 +81,7 @@ export default class Drafts extends Component {
     this.clearErrorMessages();
     try {
       this.setState({ draftToEdit: item });
-      this.setState({ thisDraft: item });
+      this.setState({ thisDraftMessage: item.message });
       this.setState({ editable: true });
       this.setState({ saveEditChangesButtonDisabled: false });
     } catch (error) {
@@ -89,19 +91,20 @@ export default class Drafts extends Component {
 
   async saveEdit() {
     try {
-      const messages = await AsyncStorage.getItem('draftMessages');
-      if (messages !== null) {
-        const draftMessages = JSON.parse(messages);
-        const index = draftMessages.findIndex((message) => message === this.state.draftToEdit);
-        if (index !== -1) {
-          draftMessages[index] = this.state.thisDraft;
-          this.setState({ draftMessages });
-          await AsyncStorage.setItem('draftMessages', JSON.stringify(draftMessages));
-          this.setState({ draftToEdit: '' });
-          this.setState({ thisDraft: '' });
-          this.setState({ editable: false });
-          this.setState({ saveEditChangesButtonDisabled: true });
-        }
+      const { draftToEdit } = this.state;
+      const draftObjects = await AsyncStorage.getItem('draftMessages');
+      if (draftObjects !== null) {
+        const drafts = JSON.parse(draftObjects);
+        this.setState({ drafts });
+        drafts[draftToEdit.index].message = this.state.thisDraftMessage;
+        this.setState({ drafts });
+        await AsyncStorage.setItem('draftMessages', JSON.stringify(drafts));
+        this.showDrafts();
+
+        this.setState({ draftToEdit: '' });
+        this.setState({ thisDraftMessage: '' });
+        this.setState({ editable: false });
+        this.setState({ saveEditChangesButtonDisabled: true });
       }
     } catch (error) {
       this.setState({ error: error.message });
@@ -111,10 +114,26 @@ export default class Drafts extends Component {
   async showDrafts() {
     this.clearErrorMessages();
     try {
-      const messages = await AsyncStorage.getItem('draftMessages');
-      if (messages !== null) {
-        const draftMessages = JSON.parse(messages);
-        this.setState({ draftMessages: draftMessages.map((message) => String(message)) });
+      const draftObjects = await AsyncStorage.getItem('draftMessages');
+      if (draftObjects !== null) {
+        const drafts = JSON.parse(draftObjects);
+        this.setState({ drafts });
+
+        // The code below is used to keep track of the index
+        // that the drafts have in the list of all drafts,
+        // even when they are filtered to show only the
+        // drafts specific to the current chat.
+        // E.g. If a draft has index 5 in the all draft list
+        // but it is the first draft of the current chat,
+        // it will still have a property that stores the index 5.
+
+        const thisChatDrafts = drafts
+          .filter((draft) => draft.chatId === this.route.params.chatId)
+          .map((draft) => {
+            const index = drafts.findIndex((message) => message === draft);
+            return { ...draft, index };
+          });
+        this.setState({ thisChatDrafts });
       }
     } catch (error) {
       this.setState({ error: error.message });
@@ -134,23 +153,23 @@ export default class Drafts extends Component {
 
   renderItem = ({ item }) => (
     <DraftMessage
-      message={item}
+      message={item.message}
       onDelete={() => this.deleteDraft(item)}
       onEdit={() => this.editDraft(item)}
-      onSend={() => this.send(this.route.params.chatId, item)}
+      onSend={() => this.send(item)}
       onSchedule={() => this.schedule(this.route.params.chatId, item)}
     />
   );
 
   render() {
-    const { draftMessages } = this.state;
+    const { thisChatDrafts } = this.state;
     const { error } = this.state;
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeaderWithIcon navigation={this.navigation} title="Drafts" />
         <View style={GlobalStyle.wrapper}>
           <FlatList
-            data={draftMessages}
+            data={thisChatDrafts}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => index.toString()}
           />
@@ -160,8 +179,8 @@ export default class Drafts extends Component {
             multiline
             style={styles.messageBox}
             maxLength={70}
-            onChangeText={(thisDraft) => this.setState({ thisDraft })}
-            value={this.state.thisDraft}
+            onChangeText={(thisDraftMessage) => this.setState({ thisDraftMessage })}
+            value={this.state.thisDraftMessage}
             editable={this.state.editable}
           />
           <TouchableOpacity disabled={this.state.saveEditChangesButtonDisabled}>
