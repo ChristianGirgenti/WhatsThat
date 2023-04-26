@@ -28,6 +28,7 @@ export default class Conversation extends Component {
   componentDidMount() {
     this.navigation.addListener('focus', () => {
       this.viewSingleChatDetail(this.route.params.chatId);
+      setInterval(() => this.viewSingleChatDetail(this.route.params.chatId), 5000);
     });
   }
 
@@ -139,6 +140,7 @@ export default class Conversation extends Component {
   }
 
   async viewSingleChatDetail(chatId) {
+    console.log('helloo')
     this.clearErrorMessages();
     return fetch(
       `http://localhost:3333/api/1.0.0/chat/${chatId}`,
