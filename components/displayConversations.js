@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, FlatList, StyleSheet, TouchableOpacity, TextInput, Text, ActivityIndicator,
+  View, FlatList, StyleSheet, TouchableOpacity, TextInput, Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,7 +18,6 @@ export default class DisplayConversations extends Component {
       newConversationTitle: '',
       conversations: [],
       error: '',
-      isLoading: true,
     };
   }
 
@@ -126,7 +125,6 @@ export default class DisplayConversations extends Component {
         if (response.status === 200) {
           const responseJson = await response.json();
           this.setState({ conversations: responseJson });
-          this.setState({ isLoading: false });
         } else if (response.status === 401) {
           console.log('Unauthorised');
           await AsyncStorage.removeItem('whatsthat_session_token');
@@ -201,15 +199,6 @@ export default class DisplayConversations extends Component {
   render() {
     const { conversations } = this.state;
     const { error } = this.state;
-    const { isLoading } = this.state;
-
-    if (isLoading) {
-      return (
-        <View>
-          <ActivityIndicator />
-        </View>
-      );
-    }
     return (
       <View style={GlobalStyle.mainContainer}>
         <NavigationHeader title="Conversations" />
