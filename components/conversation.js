@@ -28,8 +28,12 @@ export default class Conversation extends Component {
   componentDidMount() {
     this.navigation.addListener('focus', () => {
       this.viewSingleChatDetail(this.route.params.chatId);
-      setInterval(() => this.viewSingleChatDetail(this.route.params.chatId), 5000);
+      this.interval = setInterval(() => this.viewSingleChatDetail(this.route.params.chatId), 5000);
     });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   renderItem = ({ item }) => (
@@ -140,7 +144,6 @@ export default class Conversation extends Component {
   }
 
   async viewSingleChatDetail(chatId) {
-    console.log('helloo')
     this.clearErrorMessages();
     return fetch(
       `http://localhost:3333/api/1.0.0/chat/${chatId}`,
@@ -163,6 +166,7 @@ export default class Conversation extends Component {
         } else if (response.status === 403) throw new Error('Can not access this chat');
         else if (response.status === 404) {
           console.log('Chat not found');
+          clearInterval(this.interval);
           this.navigation.navigate('DisplayConversation');
         } else throw new Error('Something went wrong while retrieving your data');
       })
