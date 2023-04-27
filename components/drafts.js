@@ -50,6 +50,7 @@ export default class Drafts extends Component {
     )
       .then(async (response) => {
         if (response.status === 200) {
+          this.deleteDraft(draft);
           this.navigation.goBack();
         } else if (response.status === 401) {
           console.log('Unauthorised');

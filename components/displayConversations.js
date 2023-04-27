@@ -26,34 +26,47 @@ export default class DisplayConversations extends Component {
       this.setState({ newConversationTitle: '' });
       this.setState({ conversations: [] });
       this.viewAllChats();
+      this.interval = setInterval(() => this.viewAllChats(), 5000);
       this.checkForScheduledDrafts();
     });
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   async checkForScheduledDrafts() {
     const today = new Date();
+    const allExistingChatId = [];
+    this.state.conversations.forEach((conversation) => {
+      allExistingChatId.push(conversation.chat_id);
+    });
+
     try {
       const draftObjects = await AsyncStorage.getItem('draftMessages');
       if (draftObjects !== null) {
         const drafts = JSON.parse(draftObjects);
         drafts.forEach((draft) => {
-          const dateTimeParts = draft.date.split(' ');
+          if (allExistingChatId.includes(draft.chatId)) {
+            const dateTimeParts = draft.date.split(' ');
 
-          const dateParts = dateTimeParts[0].split('-');
-          const timeParts = dateTimeParts[1].split(':');
+            const dateParts = dateTimeParts[0].split('-');
+            const timeParts = dateTimeParts[1].split(':');
 
-          const day = parseInt(dateParts[0], 10);
-          const month = parseInt(dateParts[1], 10) - 1;
-          const year = parseInt(dateParts[2], 10);
+            const day = parseInt(dateParts[0], 10);
+            const month = parseInt(dateParts[1], 10) - 1;
+            const year = parseInt(dateParts[2], 10);
 
-          const hours = parseInt(timeParts[0], 10);
-          const minutes = parseInt(timeParts[1], 10);
-          const seconds = parseInt(timeParts[2], 10);
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            const seconds = parseInt(timeParts[2], 10);
+            const draftScheduledDate = new Date(year, month, day, hours, minutes, seconds);
 
-          const draftScheduledDate = new Date(year, month, day, hours, minutes, seconds);
-
-          if (draftScheduledDate < today) {
-            this.sendScheduledDrafts(draft);
+            if (draftScheduledDate < today) {
+              this.sendScheduledDrafts(draft);
+            }
+          } else {
+            this.removeDraftSentFromStorage(draft);
           }
         });
       }
