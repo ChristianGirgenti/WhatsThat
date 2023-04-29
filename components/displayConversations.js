@@ -26,13 +26,8 @@ export default class DisplayConversations extends Component {
       this.setState({ newConversationTitle: '' });
       this.setState({ conversations: [] });
       this.viewAllChats();
-      this.interval = setInterval(() => this.viewAllChats(), 5000);
       this.checkForScheduledDrafts();
     });
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   async checkForScheduledDrafts() {
